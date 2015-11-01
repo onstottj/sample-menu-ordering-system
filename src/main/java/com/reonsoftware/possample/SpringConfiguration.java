@@ -1,4 +1,4 @@
-package com.reonsoftware.possample.spring;
+package com.reonsoftware.possample;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
