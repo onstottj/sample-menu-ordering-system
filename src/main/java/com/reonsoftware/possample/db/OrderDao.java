@@ -7,7 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @author Jon Onstott
  * @since 11/1/2015
  */
-public class ItemAndOrderDao {
+public class OrderDao {
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

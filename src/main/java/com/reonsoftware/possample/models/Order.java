@@ -7,6 +7,7 @@ import java.util.List;
  * @since 11/1/2015
  */
 public class Order {
+
     private final int id;
     private final Integer orderNumber;
     private final List<Item> items;
@@ -28,4 +29,5 @@ public class Order {
     public List<Item> getItems() {
         return items;
     }
+
 }

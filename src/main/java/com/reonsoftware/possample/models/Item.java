@@ -7,17 +7,18 @@ import java.math.BigDecimal;
  * @since 11/1/2015
  */
 public class Item {
-    private final int id;
+
+    private final long id;
     private final String name;
     private final BigDecimal price;
 
-    public Item(int id, String name, BigDecimal price) {
+    public Item(long id, String name, BigDecimal price) {
         this.id = id;
         this.name = name;
         this.price = price;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -28,4 +29,5 @@ public class Item {
     public BigDecimal getPrice() {
         return price;
     }
+
 }
