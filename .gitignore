@@ -1,0 +1,24 @@
+# Intellij
+/*.iws
+/*.ids
+/.idea/workspace.xml
+/.idea/compiler.xml
+/.idea/libraries/
+/.idea/artifacts/
+/.idea/dataSources*
+/.idea/sqldialects*
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Maven
+target/
+*.pom.xml.versionsBackup
+
+# Build
+builds/
+out/
+dist/
