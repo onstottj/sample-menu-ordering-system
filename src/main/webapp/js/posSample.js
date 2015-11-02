@@ -65,6 +65,10 @@ angular.module('posApp', ['ngFileUpload'])
             return "-----";
         };
 
+        $scope.isPaymentValid = function () {
+            return isFinite($scope.getChangeDue());
+        };
+
         $scope.cancelPayment = function () {
             $scope.isPaying = false;
             $scope.amountTendered = 0;
