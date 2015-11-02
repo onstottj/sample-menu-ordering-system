@@ -5,24 +5,79 @@
 
 // In a real app, we wouldn't have globals hanging around like this
 var baseUrl = "http://localhost:8080/api/";
-// This sales tax is about 6%
-var salesTaxRate = 0.059446733372;
 
 var posModule = angular.module('posApp', ['ui.bootstrap', 'ngFileUpload']);
 
 posModule.service('orderStatusService', function () {
     // A dictionary of the items in the order; see http://stackoverflow.com/questions/11985863/how-to-use-ng-repeat-for-dictionaries-in-angularjs
     var itemsInOrder = {};
+
+    function getSubtotal() {
+        var subtotal = 0;
+        angular.forEach(itemsInOrder, function (entry) {
+            subtotal += entry.quantity * entry.item.price;
+        });
+        return subtotal;
+    }
+
+    function getSalesTax() {
+        // This sales tax is about 6%.  The rate could be made into a constant of some sort.
+        return getSubtotal() * 0.059446733372;
+    }
+
     return {
-        itemsInOrder : itemsInOrder
+        itemsInOrder: itemsInOrder,
+        getSubtotal: getSubtotal,
+        getSalesTax: getSalesTax,
+        getGrandTotal: function () {
+            return getSubtotal() + getSalesTax();
+        }
     };
 });
 
-posModule.controller('OrderEntryController', function ($scope, $http, $uibModal, orderStatusService) {
-    $scope.allItems = [];
-    $scope.itemsInOrder = orderStatusService.itemsInOrder;
-    $scope.selectedItem = null;
+posModule.controller('TenderPaymentController', function ($scope, $uibModalInstance, orderStatusService) {
+    // Make some values available to the view
+    $scope.getGrandTotal = orderStatusService.getGrandTotal;
+
     $scope.amountTendered = 0;
+
+    $scope.getChangeDue = function () {
+        var amountTendered = $scope.amountTendered;
+        if (amountTendered && isFinite(amountTendered)) {
+            var change = amountTendered - orderStatusService.getGrandTotal();
+            if (change > 0) {
+                return change;
+            }
+        }
+        return "-----";
+    };
+
+    $scope.isPaymentValid = function () {
+        return isFinite($scope.getChangeDue());
+    };
+
+
+    $scope.submitPayment = function () {
+        // TODO
+
+        $uibModalInstance.close();
+    };
+
+    $scope.cancelPayment = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+});
+
+posModule.controller('OrderEntryController', function ($scope, $http, $uibModal, orderStatusService) {
+    // Make some values available to the view
+    $scope.itemsInOrder = orderStatusService.itemsInOrder;
+    $scope.getSubtotal = orderStatusService.getSubtotal;
+    $scope.getSalesTax = orderStatusService.getSalesTax;
+    $scope.getGrandTotal = orderStatusService.getGrandTotal;
+
+    $scope.allItems = [];
+    $scope.selectedItem = null;
 
     $scope.addItem = function (item) {
         var itemName = item.name;
@@ -39,62 +94,18 @@ posModule.controller('OrderEntryController', function ($scope, $http, $uibModal,
         $scope.selectedItem = item;
     };
 
-    $scope.getSubtotal = function () {
-        var subtotal = 0;
-        angular.forEach(orderStatusService.itemsInOrder, function (entry) {
-            subtotal += entry.quantity * entry.item.price;
-        });
-        return subtotal;
-    };
-
-    $scope.getSalesTax = function () {
-        return $scope.getSubtotal() * salesTaxRate;
-    };
-
-    $scope.getGrandTotal = function () {
-        return $scope.getSubtotal() + $scope.getSalesTax();
-    };
-
     $scope.voidSelectedItem = function () {
         var item = $scope.selectedItem;
         delete orderStatusService.itemsInOrder[item.name];
         $scope.selectedItem = null;
     };
 
-    $scope.getChangeDue = function () {
-        var amountTendered = $scope.amountTendered;
-        if (amountTendered && isFinite(amountTendered)) {
-            var change = amountTendered - $scope.getGrandTotal();
-            if (change > 0) {
-                return change;
-            }
-        }
-        return "-----";
-    };
-
-    $scope.isPaymentValid = function () {
-        return isFinite($scope.getChangeDue());
-    };
-
     $scope.startPaying = function () {
-        // TODO: use different controller?
         $uibModal.open({
             animation: true,
             templateUrl: 'tenderPaymentDialog.html',
-            controller: 'OrderEntryController'
+            controller: 'TenderPaymentController'
         });
-    };
-
-    $scope.submitPayment = function () {
-        // TODO
-
-        $uibModalInstance.close();
-    };
-
-    $scope.cancelPayment = function () {
-        $scope.amountTendered = 0;
-
-        $uibModalInstance.dismiss('cancel');
     };
 
     // Load the list of menu items
