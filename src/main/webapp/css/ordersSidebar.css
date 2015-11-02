@@ -46,7 +46,7 @@
 
 .totalsPanelRow {
     display: flex;
-    padding: 4px 0;
+    padding: 4px 5px 4px 0;
 }
 
 .selectedRow {

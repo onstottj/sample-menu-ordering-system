@@ -8,101 +8,125 @@ var baseUrl = "http://localhost:8080/api/";
 // This sales tax is about 6%
 var salesTaxRate = 0.059446733372;
 
-angular.module('posApp', ['ngFileUpload'])
-    .controller('OrderEntryController', function ($scope, $http) {
-        $scope.allItems = [];
-        // A dictionary of the items in the order; see http://stackoverflow.com/questions/11985863/how-to-use-ng-repeat-for-dictionaries-in-angularjs
-        $scope.itemsInOrder = {};
-        $scope.selectedItem = null;
-        $scope.isPaying = false;
-        $scope.amountTendered = 0;
+var posModule = angular.module('posApp', ['ui.bootstrap', 'ngFileUpload']);
 
-        $scope.addItem = function (item) {
-            var itemName = item.name;
+posModule.service('orderStatusService', function () {
+    // A dictionary of the items in the order; see http://stackoverflow.com/questions/11985863/how-to-use-ng-repeat-for-dictionaries-in-angularjs
+    var itemsInOrder = {};
+    return {
+        itemsInOrder : itemsInOrder
+    };
+});
 
-            var existingItem = $scope.itemsInOrder[itemName];
+posModule.controller('OrderEntryController', function ($scope, $http, $uibModal, orderStatusService) {
+    $scope.allItems = [];
+    $scope.itemsInOrder = orderStatusService.itemsInOrder;
+    $scope.selectedItem = null;
+    $scope.amountTendered = 0;
 
-            var newItem = existingItem || {item: item, quantity: 0};
-            newItem.quantity++;
+    $scope.addItem = function (item) {
+        var itemName = item.name;
 
-            $scope.itemsInOrder[itemName] = newItem;
-        };
+        var existingItem = orderStatusService.itemsInOrder[itemName];
 
-        $scope.selectItem = function (item) {
-            $scope.selectedItem = item;
-        };
+        var newItem = existingItem || {item: item, quantity: 0};
+        newItem.quantity++;
 
-        $scope.getSubtotal = function () {
-            var subtotal = 0;
-            angular.forEach($scope.itemsInOrder, function (entry) {
-                subtotal += entry.quantity * entry.item.price;
-            });
-            return subtotal;
-        };
+        orderStatusService.itemsInOrder[itemName] = newItem;
+    };
 
-        $scope.getSalesTax = function () {
-            return $scope.getSubtotal() * salesTaxRate;
-        };
+    $scope.selectItem = function (item) {
+        $scope.selectedItem = item;
+    };
 
-        $scope.getGrandTotal = function () {
-            return $scope.getSubtotal() + $scope.getSalesTax();
-        };
-
-        $scope.voidSelectedItem = function () {
-            var item = $scope.selectedItem;
-            delete $scope.itemsInOrder[item.name];
-            $scope.selectedItem = null;
-        };
-
-        $scope.getChangeDue = function () {
-            var amountTendered = $scope.amountTendered;
-            if (amountTendered && isFinite(amountTendered)) {
-                var change = amountTendered - $scope.getGrandTotal();
-                if (change > 0) {
-                    return change;
-                }
-            }
-            return "-----";
-        };
-
-        $scope.isPaymentValid = function () {
-            return isFinite($scope.getChangeDue());
-        };
-
-        $scope.cancelPayment = function () {
-            $scope.isPaying = false;
-            $scope.amountTendered = 0;
-        };
-
-        // Load the list of menu items
-        $http.get(baseUrl + 'items').success(function (data) {
-            $scope.allItems = data;
+    $scope.getSubtotal = function () {
+        var subtotal = 0;
+        angular.forEach(orderStatusService.itemsInOrder, function (entry) {
+            subtotal += entry.quantity * entry.item.price;
         });
-    })
-    .controller('FileUploadController', ['$scope', 'Upload', '$timeout', function ($scope, Upload, $timeout) {
-        // Angular file upload code adapted from http://jsfiddle.net/danialfarid/0mz6ff9o/135/
-        $scope.uploadFiles = function (file, errFiles) {
-            $scope.f = file;
-            $scope.errFile = errFiles && errFiles[0];
-            if (file) {
-                file.upload = Upload.upload({
-                    url: baseUrl + 'items/upload',
-                    data: {file: file}
-                });
+        return subtotal;
+    };
 
-                file.upload.then(function (response) {
-                    $timeout(function () {
-                        file.result = response.data;
-                        $scope.uploadMessage = 'Items imported successfully';
-                    });
-                }, function (response) {
-                    // There was an error
-                    if (response.status > 0)
-                        $scope.uploadMessage = 'HTTP ' + response.status + ': ' + response.data;
-                }, function (evt) {
-                    file.progress = Math.min(100, parseInt(100.0 *
-                        evt.loaded / evt.total));
-                });
+    $scope.getSalesTax = function () {
+        return $scope.getSubtotal() * salesTaxRate;
+    };
+
+    $scope.getGrandTotal = function () {
+        return $scope.getSubtotal() + $scope.getSalesTax();
+    };
+
+    $scope.voidSelectedItem = function () {
+        var item = $scope.selectedItem;
+        delete orderStatusService.itemsInOrder[item.name];
+        $scope.selectedItem = null;
+    };
+
+    $scope.getChangeDue = function () {
+        var amountTendered = $scope.amountTendered;
+        if (amountTendered && isFinite(amountTendered)) {
+            var change = amountTendered - $scope.getGrandTotal();
+            if (change > 0) {
+                return change;
             }
         }
-    }]);
+        return "-----";
+    };
+
+    $scope.isPaymentValid = function () {
+        return isFinite($scope.getChangeDue());
+    };
+
+    $scope.startPaying = function () {
+        // TODO: use different controller?
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'tenderPaymentDialog.html',
+            controller: 'OrderEntryController'
+        });
+    };
+
+    $scope.submitPayment = function () {
+        // TODO
+
+        $uibModalInstance.close();
+    };
+
+    $scope.cancelPayment = function () {
+        $scope.amountTendered = 0;
+
+        $uibModalInstance.dismiss('cancel');
+    };
+
+    // Load the list of menu items
+    $http.get(baseUrl + 'items').success(function (data) {
+        $scope.allItems = data;
+    });
+});
+
+posModule.controller('FileUploadController', ['$scope', 'Upload', '$timeout', function ($scope, Upload, $timeout) {
+    // Angular file upload code adapted from http://jsfiddle.net/danialfarid/0mz6ff9o/135/
+    $scope.uploadFiles = function (file, errFiles) {
+        $scope.f = file;
+        $scope.errFile = errFiles && errFiles[0];
+        if (file) {
+            file.upload = Upload.upload({
+                url: baseUrl + 'items/upload',
+                data: {file: file}
+            });
+
+            file.upload.then(function (response) {
+                $timeout(function () {
+                    file.result = response.data;
+                    $scope.uploadMessage = 'Items imported successfully';
+                });
+            }, function (response) {
+                // There was an error
+                if (response.status > 0)
+                    $scope.uploadMessage = 'HTTP ' + response.status + ': ' + response.data;
+            }, function (evt) {
+                file.progress = Math.min(100, parseInt(100.0 *
+                    evt.loaded / evt.total));
+            });
+        }
+    }
+}]);

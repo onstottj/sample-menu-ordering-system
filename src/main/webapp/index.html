@@ -81,7 +81,7 @@
 
                 <div class="smallVerticalMargin">
                     <button id="voidOrderButton"
-                            class="btn btn-default"
+                            class="btn btn-danger"
                             ng-disabled="!selectedItem"
                             ng-click="voidSelectedItem()">
                         VOID
@@ -89,7 +89,7 @@
                     <button id="payNowButton"
                             class="btn btn-primary"
                             ng-disabled="getSubtotal() == 0"
-                            ng-click="isPaying = true">
+                            ng-click="startPaying()">
                         PAY NOW
                     </button>
                 </div>
@@ -97,53 +97,52 @@
         </div>
 
         <!-- Tender Payment dialog -->
-        <div ng-show="isPaying">
-            <hr/>
+        <script type="text/ng-template" id="tenderPaymentDialog.html">
+            <div class="modal-header">
+                <h3 class="modal-title">TENDER PAYMENT</h3>
+            </div>
+            <div class="modal-body">
 
-            <table id="paymentDialog" class="centeredTable">
-                <tr>
-                    <td>
-                        <div class="largeMargin">TENDER PAYMENT</div>
+                <table id="paymentDialog" class="centeredTable">
+                    <tr>
+                        <td>
+                            <table class="centeredTable largeMargin">
+                                <tr>
+                                    <td class="paymentDialogLeftColumn">Amount Due:</td>
+                                    <td ng-bind="getGrandTotal() | currency"></td>
+                                </tr>
+                                <tr>
+                                    <td class="paymentDialogLeftColumn">Amount Tendered:</td>
+                                    <td>
+                                        <input id="txtAmountTendered"
+                                               type="text"
+                                               ng-model="amountTendered"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="paymentDialogLeftColumn">Change Due:</td>
+                                    <td ng-bind="getChangeDue() | currency"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
 
-                        <table class="centeredTable largeMargin">
-                            <tr>
-                                <td class="paymentDialogLeftColumn">Amount Due:</td>
-                                <td ng-bind="getGrandTotal() | currency"></td>
-                            </tr>
-                            <tr>
-                                <td class="paymentDialogLeftColumn">Amount Tendered:</td>
-                                <td>
-                                    <input id="txtAmountTendered"
-                                           type="text"
-                                           ng-model="amountTendered"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="paymentDialogLeftColumn">Change Due:</td>
-                                <td ng-bind="getChangeDue() | currency"></td>
-                            </tr>
-                        </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default"
+                        ng-click="cancelPayment()">
+                    CANCEL
+                </button>
 
-                        <table class="centeredTable largeBottomMargin">
-                            <tr>
-                                <td>
-                                    <button class="btn btn-default"
-                                            ng-click="cancelPayment()">
-                                        CANCEL
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary"
-                                            ng-disabled="!isPaymentValid()">
-                                        TENDER
-                                    </button>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                <button class="btn btn-primary"
+                        ng-disabled="!isPaymentValid()"
+                        ng-click="submitPayment()">
+                    TENDER
+                </button>
+            </div>
+        </script>
+
     </form>
 </div>
 
