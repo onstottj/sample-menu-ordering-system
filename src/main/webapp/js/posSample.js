@@ -11,6 +11,8 @@ var posModule = angular.module('posApp', ['ui.bootstrap', 'ngFileUpload']);
 posModule.service('orderStatusService', function () {
     // A dictionary of the items in the order; see http://stackoverflow.com/questions/11985863/how-to-use-ng-repeat-for-dictionaries-in-angularjs
     var itemsInOrder = {};
+    // When payment is processed, this becomes a JSON object with amountTendered and changeDue
+    var paymentResults = {};
 
     function getSubtotal() {
         var subtotal = 0;
@@ -27,6 +29,7 @@ posModule.service('orderStatusService', function () {
 
     return {
         itemsInOrder: itemsInOrder,
+        paymentResults: paymentResults,
         getSubtotal: getSubtotal,
         getSalesTax: getSalesTax,
         getGrandTotal: function () {
@@ -35,43 +38,10 @@ posModule.service('orderStatusService', function () {
     };
 });
 
-posModule.controller('TenderPaymentController', function ($scope, $uibModalInstance, orderStatusService) {
-    // Make some values available to the view
-    $scope.getGrandTotal = orderStatusService.getGrandTotal;
-
-    $scope.amountTendered = 0;
-
-    $scope.getChangeDue = function () {
-        var amountTendered = $scope.amountTendered;
-        if (amountTendered && isFinite(amountTendered)) {
-            var change = amountTendered - orderStatusService.getGrandTotal();
-            if (change > 0) {
-                return change;
-            }
-        }
-        return "-----";
-    };
-
-    $scope.isPaymentValid = function () {
-        return isFinite($scope.getChangeDue());
-    };
-
-
-    $scope.submitPayment = function () {
-        // TODO
-
-        $uibModalInstance.close();
-    };
-
-    $scope.cancelPayment = function () {
-        $uibModalInstance.dismiss('cancel');
-    };
-
-});
-
 posModule.controller('OrderEntryController', function ($scope, $http, $uibModal, orderStatusService) {
     // Make some values available to the view
     $scope.itemsInOrder = orderStatusService.itemsInOrder;
+    $scope.paymentResults = orderStatusService.paymentResults;
     $scope.getSubtotal = orderStatusService.getSubtotal;
     $scope.getSalesTax = orderStatusService.getSalesTax;
     $scope.getGrandTotal = orderStatusService.getGrandTotal;
@@ -108,10 +78,51 @@ posModule.controller('OrderEntryController', function ($scope, $http, $uibModal,
         });
     };
 
+    $scope.isPaymentComplete = function () {
+        var paymentResults = $scope.paymentResults;
+        return isFinite(paymentResults.amountTendered) && isFinite(paymentResults.changeDue);
+    };
+
     // Load the list of menu items
     $http.get(baseUrl + 'items').success(function (data) {
         $scope.allItems = data;
     });
+});
+
+posModule.controller('TenderPaymentController', function ($scope, $uibModalInstance, orderStatusService) {
+    // Make some values available to the view
+    $scope.getGrandTotal = orderStatusService.getGrandTotal;
+
+    $scope.amountTendered = 0;
+
+    $scope.getChangeDue = function () {
+        var amountTendered = $scope.amountTendered;
+        if (amountTendered && isFinite(amountTendered)) {
+            var change = amountTendered - orderStatusService.getGrandTotal();
+            if (change > 0) {
+                return change;
+            }
+        }
+        return "-----";
+    };
+
+    $scope.isPaymentValid = function () {
+        return isFinite($scope.getChangeDue());
+    };
+
+
+    $scope.submitPayment = function () {
+        orderStatusService.paymentResults.amountTendered = $scope.amountTendered;
+        orderStatusService.paymentResults.changeDue = $scope.getChangeDue();
+        // TODO: ajax
+
+        $uibModalInstance.close();
+    };
+
+    $scope.cancelPayment = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
 });
 
 posModule.controller('FileUploadController', ['$scope', 'Upload', '$timeout', function ($scope, Upload, $timeout) {

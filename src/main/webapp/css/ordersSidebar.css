@@ -44,6 +44,10 @@
     flex-direction: column;
 }
 
+#paymentResultsPanel {
+    padding-left: 20px;
+}
+
 .totalsPanelRow {
     display: flex;
     padding: 4px 5px 4px 0;

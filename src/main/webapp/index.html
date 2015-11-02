@@ -77,18 +77,29 @@
                             <div class="summaryRightColumn" ng-bind="getGrandTotal() | currency"></div>
                         </div>
                     </div>
+                    <div id="paymentResultsPanel"
+                         ng-show="isPaymentComplete()">
+                        <div class="totalsPanelRow">
+                            <div class="summaryLeftColumn">Amount tendered:</div>
+                            <div class="summaryRightColumn" ng-bind="paymentResults.amountTendered | currency"></div>
+                        </div>
+                        <div class="totalsPanelRow">
+                            <div class="summaryLeftColumn">Change due:</div>
+                            <div class="summaryRightColumn" ng-bind="paymentResults.changeDue | currency"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="smallVerticalMargin">
                     <button id="voidOrderButton"
                             class="btn btn-danger"
-                            ng-disabled="!selectedItem"
+                            ng-disabled="!selectedItem || isPaymentComplete()"
                             ng-click="voidSelectedItem()">
                         VOID
                     </button>
                     <button id="payNowButton"
                             class="btn btn-primary"
-                            ng-disabled="getSubtotal() == 0"
+                            ng-disabled="getSubtotal() == 0 || isPaymentComplete()"
                             ng-click="startPaying()">
                         PAY NOW
                     </button>
@@ -106,7 +117,7 @@
                 <table id="paymentDialog" class="centeredTable">
                     <tr>
                         <td>
-                            <table class="centeredTable largeMargin">
+                            <table class="centeredTable">
                                 <tr>
                                     <td class="paymentDialogLeftColumn">Amount Due:</td>
                                     <td ng-bind="getGrandTotal() | currency"></td>
