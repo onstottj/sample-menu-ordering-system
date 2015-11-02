@@ -5,6 +5,8 @@ import com.reonsoftware.possample.models.Item;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +32,8 @@ import java.util.stream.StreamSupport;
 @RestController
 public class ItemController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
+
     @Autowired
     private ItemDao itemDao;
 
@@ -39,17 +43,17 @@ public class ItemController {
     }
 
     @RequestMapping(value = "/api/items/upload", method = RequestMethod.POST)
-    public String handleItemListUpload(@RequestParam("file") MultipartFile file) {
+    public void handleItemListUpload(@RequestParam("file") MultipartFile file) {
         if (!file.isEmpty()) {
             try {
                 List<Item> parsedItems = parseItemsCsv(file);
                 parsedItems.forEach(itemDao::insertItem);
-                return "Successfully uploaded the items list";
+                LOGGER.info("Imported " + parsedItems.size() + " items from a CSV file");
             } catch (IOException e) {
-                return "Failed to upload the items list:" + e.getMessage();
+                LOGGER.error("Failed to import items from a CSV file", e);
             }
         } else {
-            return "Failed to upload the items list: the file was empty.";
+            LOGGER.warn("An empty items file was uploaded");
         }
     }
 
@@ -68,7 +72,9 @@ public class ItemController {
                                     name = record.get("Item Name");
                                     priceText = record.get("Price");
                                 } catch (RuntimeException e) {
-                                    throw new IllegalArgumentException("Unable to parse the items CSV file", e);
+                                    String errorMessage = "Unable to process an item from a CSV file: " + record;
+                                    LOGGER.error(errorMessage, e);
+                                    throw new IllegalArgumentException(errorMessage, e);
                                 }
                                 return new Item(null, name, parseCurrency(priceText));
                             })

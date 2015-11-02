@@ -18,10 +18,12 @@ angular.module('posApp', ['ngFileUpload'])
                 file.upload.then(function (response) {
                     $timeout(function () {
                         file.result = response.data;
+                        $scope.uploadMessage = 'Items imported successfully';
                     });
                 }, function (response) {
+                    // There was an error
                     if (response.status > 0)
-                        $scope.errorMsg = response.status + ': ' + response.data;
+                        $scope.uploadMessage = 'HTTP ' + response.status + ': ' + response.data;
                 }, function (evt) {
                     file.progress = Math.min(100, parseInt(100.0 *
                         evt.loaded / evt.total));
