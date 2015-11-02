@@ -45,23 +45,23 @@
                         <div class="totalsPanelRow" ng-repeat="(name, entry) in itemsInOrder">
                             <div class="orderNumber">{{entry.quantity}}</div>
                             <div class="leftColumn">{{name}}</div>
-                            <div class="rightColumn">{{entry.item.price}}</div>
+                            <div class="rightColumn">{{entry.item.price | currency}}</div>
                         </div>
                     </div>
                     <div id="totalsPanel">
                         <div class="totalsPanelRow">
                             <div class="leftColumn">Subtotal:</div>
-                            <div class="rightColumn">16.99</div>
+                            <div class="rightColumn" ng-bind="getSubtotal() | currency"></div>
                         </div>
 
                         <div class="totalsPanelRow">
                             <div class="leftColumn">Sales Tax:</div>
-                            <div class="rightColumn">1.01</div>
+                            <div class="rightColumn" ng-bind="getSalesTax() | currency"></div>
                         </div>
 
                         <div class="totalsPanelRow">
                             <div class="leftColumn">Grand Total:</div>
-                            <div class="rightColumn">18.00</div>
+                            <div class="rightColumn" ng-bind="getGrandTotal() | currency"></div>
                         </div>
                     </div>
                 </div>

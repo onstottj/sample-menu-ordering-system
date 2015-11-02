@@ -5,6 +5,8 @@
 
 // In a real app, we wouldn't have globals hanging around like this
 var baseUrl = "http://localhost:8080/api/";
+// This sales tax is about 6%
+var salesTaxRate = 0.059446733372;
 
 angular.module('posApp', ['ngFileUpload'])
     .controller('OrderEntryController', function ($scope, $http) {
@@ -21,6 +23,22 @@ angular.module('posApp', ['ngFileUpload'])
             newItem.quantity++;
 
             $scope.itemsInOrder[itemName] = newItem;
+        };
+
+        $scope.getSubtotal = function () {
+            var subtotal = 0;
+            angular.forEach($scope.itemsInOrder, function (entry) {
+                subtotal += entry.quantity * entry.item.price;
+            });
+            return subtotal;
+        };
+
+        $scope.getSalesTax = function () {
+            return $scope.getSubtotal() * salesTaxRate;
+        };
+
+        $scope.getGrandTotal = function () {
+            return $scope.getSubtotal() + $scope.getSalesTax();
         };
 
         // Load the list of menu items
