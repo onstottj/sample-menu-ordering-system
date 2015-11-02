@@ -42,7 +42,11 @@
                 <!-- The list of items in this order -->
                 <div id="orderItemsPanel">
                     <div id="orderItemsList">
-                        <div class="totalsPanelRow" ng-repeat="(name, entry) in itemsInOrder">
+                        <div class="totalsPanelRow {{entry.item == selectedItem ? 'selectedRow' : ''}}"
+                             style="cursor:pointer;"
+                             ng-repeat="(name, entry) in itemsInOrder"
+                             ng-click="selectItem(entry.item)">
+
                             <div class="orderNumber">{{entry.quantity}}</div>
                             <div class="leftColumn">{{name}}</div>
                             <div class="rightColumn">{{entry.item.price | currency}}</div>
@@ -67,7 +71,7 @@
                 </div>
 
                 <div class="smallVerticalMargin">
-                    <button id="voidOrderButton">VOID</button>
+                    <button id="voidOrderButton" ng-click="voidSelectedItem()" ng-disabled="!selectedItem">VOID</button>
                     <button id="payNowButton">PAY NOW</button>
                 </div>
             </div>
