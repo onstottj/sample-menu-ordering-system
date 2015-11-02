@@ -12,9 +12,28 @@
 
     <script src="js/posSample.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
     <link rel="stylesheet" type="text/css" href="css/fileUpload.css"/>
 </head>
 <body ng-app="posApp">
+
+<div ng-controller="OrderEntryController">
+    <h4>Order entry</h4>
+
+    <div id="orderEntryPanel">
+        <div id="itemsList">
+            <button class="itemButton" ng-repeat="item in allItems">
+                {{item.name}}
+            </button>
+        </div>
+
+        <div id="orderOverviewPanel">
+            <!-- TODO -->
+        </div>
+    </div>
+</div>
+
+<hr/>
 
 <div ng-controller="FileUploadController">
     <h4>Upload an items .csv file</h4>

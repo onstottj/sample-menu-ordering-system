@@ -1,0 +1,22 @@
+#orderEntryPanel {
+    display: flex;
+}
+
+#itemsList {
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+}
+
+.itemButton {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+}
+
+#orderOverviewPanel {
+    width: 250px;
+    flex-shrink: 0;
+    border: 1px solid black;
+    margin: 10px;
+}

@@ -37,7 +37,7 @@ public class ItemController {
     @Autowired
     private ItemDao itemDao;
 
-    @RequestMapping("/api/items/")
+    @RequestMapping("/api/items")
     public List<Item> getItems() {
         return itemDao.getItems();
     }
