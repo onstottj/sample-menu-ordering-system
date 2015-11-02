@@ -1,0 +1,19 @@
+#paymentDialog {
+    text-align: center;
+    border: 1px solid black;
+    padding: 0 50px;
+}
+
+#paymentDialog td {
+    padding: 3px;
+    text-align: right;
+}
+
+.paymentDialogLeftColumn {
+    text-align: right;
+}
+
+#txtAmountTendered {
+    width: 50px;
+    text-align: right;
+}

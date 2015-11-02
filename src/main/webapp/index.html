@@ -6,15 +6,16 @@
 
     <script src="js/node_modules/angular/angular.min.js"></script>
 
+    <script src="js/posSample.js"></script>
+
     <!-- File upload, from https://github.com/danialfarid/ng-file-upload -->
     <script src="js/node_modules/ng-file-upload/dist/ng-file-upload-shim.js"></script>
     <script src="js/node_modules/ng-file-upload/dist/ng-file-upload.js"></script>
-
-    <script src="js/posSample.js"></script>
-
-    <!-- TODO: could split out the css file -->
-    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
     <link rel="stylesheet" type="text/css" href="css/fileUpload.css"/>
+
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    <link rel="stylesheet" type="text/css" href="css/ordersSidebar.css"/>
+    <link rel="stylesheet" type="text/css" href="css/tenderPaymentDialog.css"/>
 </head>
 <body ng-app="posApp">
 
@@ -23,7 +24,10 @@
         <h4>Order entry</h4>
 
         <div>
-            <button id="viewOrdersButton" class="smallHorizontalMargin">ORDERS</button>
+            <button id="viewOrdersButton"
+                    class="smallHorizontalMargin">
+                ORDERS
+            </button>
         </div>
 
         <div id="itemsAndSummaryContainer">
@@ -48,33 +52,88 @@
                              ng-click="selectItem(entry.item)">
 
                             <div class="orderNumber">{{entry.quantity}}</div>
-                            <div class="leftColumn">{{name}}</div>
-                            <div class="rightColumn">{{entry.item.price | currency}}</div>
+                            <div class="summaryLeftColumn">{{name}}</div>
+                            <div class="summaryRightColumn">{{entry.item.price | currency}}</div>
                         </div>
                     </div>
                     <div id="totalsPanel">
                         <div class="totalsPanelRow">
-                            <div class="leftColumn">Subtotal:</div>
-                            <div class="rightColumn" ng-bind="getSubtotal() | currency"></div>
+                            <div class="summaryLeftColumn">Subtotal:</div>
+                            <div class="summaryRightColumn" ng-bind="getSubtotal() | currency"></div>
                         </div>
 
                         <div class="totalsPanelRow">
-                            <div class="leftColumn">Sales Tax:</div>
-                            <div class="rightColumn" ng-bind="getSalesTax() | currency"></div>
+                            <div class="summaryLeftColumn">Sales Tax:</div>
+                            <div class="summaryRightColumn" ng-bind="getSalesTax() | currency"></div>
                         </div>
 
                         <div class="totalsPanelRow">
-                            <div class="leftColumn">Grand Total:</div>
-                            <div class="rightColumn" ng-bind="getGrandTotal() | currency"></div>
+                            <div class="summaryLeftColumn">Grand Total:</div>
+                            <div class="summaryRightColumn" ng-bind="getGrandTotal() | currency"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="smallVerticalMargin">
-                    <button id="voidOrderButton" ng-click="voidSelectedItem()" ng-disabled="!selectedItem">VOID</button>
-                    <button id="payNowButton">PAY NOW</button>
+                    <button id="voidOrderButton"
+                            ng-disabled="!selectedItem"
+                            ng-click="voidSelectedItem()">
+                        VOID
+                    </button>
+                    <button id="payNowButton"
+                            ng-disabled="getSubtotal() == 0"
+                            ng-click="isPaying = true">
+                        PAY NOW
+                    </button>
                 </div>
             </div>
+        </div>
+
+        <!-- Tender Payment dialog -->
+        <div ng-show="isPaying">
+            <hr/>
+
+            <table id="paymentDialog" class="centeredTable">
+                <tr>
+                    <td>
+                        <div class="largeMargin">TENDER PAYMENT</div>
+
+                        <table class="centeredTable largeMargin">
+                            <tr>
+                                <td class="paymentDialogLeftColumn">Amount Due:</td>
+                                <td ng-bind="getGrandTotal() | currency"></td>
+                            </tr>
+                            <tr>
+                                <td class="paymentDialogLeftColumn">Amount Tendered:</td>
+                                <td>
+                                    <input id="txtAmountTendered"
+                                           type="text"
+                                           ng-model="amountTendered"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="paymentDialogLeftColumn">Change Due:</td>
+                                <td ng-bind="getChangeDue() | currency"></td>
+                            </tr>
+                        </table>
+
+                        <table class="centeredTable largeBottomMargin">
+                            <tr>
+                                <td>
+                                    <button ng-click="cancelPayment()">
+                                        CANCEL
+                                    </button>
+                                </td>
+                                <td>
+                                    <button>
+                                        TENDER
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
         </div>
     </form>
 </div>

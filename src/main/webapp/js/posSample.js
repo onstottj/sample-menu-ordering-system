@@ -14,6 +14,8 @@ angular.module('posApp', ['ngFileUpload'])
         // A dictionary of the items in the order; see http://stackoverflow.com/questions/11985863/how-to-use-ng-repeat-for-dictionaries-in-angularjs
         $scope.itemsInOrder = {};
         $scope.selectedItem = null;
+        $scope.isPaying = false;
+        $scope.amountTendered = 0;
 
         $scope.addItem = function (item) {
             var itemName = item.name;
@@ -50,6 +52,22 @@ angular.module('posApp', ['ngFileUpload'])
             var item = $scope.selectedItem;
             delete $scope.itemsInOrder[item.name];
             $scope.selectedItem = null;
+        };
+
+        $scope.getChangeDue = function () {
+            var amountTendered = $scope.amountTendered;
+            if (amountTendered && isFinite(amountTendered)) {
+                var change = amountTendered - $scope.getGrandTotal();
+                if (change > 0) {
+                    return change;
+                }
+            }
+            return "-----";
+        };
+
+        $scope.cancelPayment = function () {
+            $scope.isPaying = false;
+            $scope.amountTendered = 0;
         };
 
         // Load the list of menu items

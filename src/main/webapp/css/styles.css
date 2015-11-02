@@ -10,82 +10,19 @@
     margin: 10px 0;
 }
 
+.largeMargin {
+    margin: 20px;
+}
+
+.largeBottomMargin {
+    margin-bottom: 20px;
+}
+
+.centeredTable {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #viewOrdersButton {
-    float: right;
-}
-
-#itemsAndSummaryContainer {
-    display: flex;
-    /* The 'view orders' button is float:right, above this div.  So we need clear:both. */
-    clear: both;
-}
-
-#itemsList {
-    display: flex;
-    flex-grow: 1;
-    flex-wrap: wrap;
-    /* The buttons will be clumped together in the center of the div (though they have their own margin settings) */
-    justify-content: center;
-    /* Make sure that the item buttons are along the top */
-    align-content: flex-start;
-}
-
-.itemButton {
-    width: 100px;
-    height: 100px;
-}
-
-#orderSidebar {
-    display: flex;
-    flex-direction: column;
-    width: 250px;
-    flex-shrink: 0;
-}
-
-#orderItemsPanel {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    height: 400px;
-    border: 1px solid black;
-}
-
-#orderItemsList {
-    flex-grow: 1;
-    overflow-y: auto;
-}
-
-#totalsPanel {
-    display: flex;
-    flex-direction: column;
-}
-
-.totalsPanelRow {
-    display: flex;
-    padding: 4px 10px;
-}
-
-.selectedRow {
-    background-color: lightblue;
-}
-
-.orderNumber {
-    margin: 0 5px;
-}
-
-.leftColumn {
-    flex-grow: 1;
-}
-
-.rightColumn {
-    text-wrap: none;
-    text-align: right;
-}
-
-#voidOrderButton {
-    float: left;
-}
-
-#payNowButton {
     float: right;
 }
