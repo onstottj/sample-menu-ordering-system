@@ -23,12 +23,12 @@
         <h4>Order entry</h4>
 
         <div>
-            <button id="viewOrdersButton" class="smallHorizontalMargin">Orders</button>
+            <button id="viewOrdersButton" class="smallHorizontalMargin">ORDERS</button>
         </div>
 
         <div id="itemsAndSummaryContainer">
             <div id="itemsList">
-                <button class="itemButton smallMargin" ng-repeat="item in allItems">
+                <button class="itemButton smallMargin" ng-repeat="item in allItems" ng-click="addItem(item)">
                     {{item.name}}
                 </button>
             </div>
@@ -42,16 +42,10 @@
                 <!-- The list of items in this order -->
                 <div id="orderItemsPanel">
                     <div id="orderItemsList">
-                        <div class="totalsPanelRow">
-                            <div class="orderNumber">1</div>
-                            <div class="leftColumn">Supreme Pizza</div>
-                            <div class="rightColumn">14.99</div>
-                        </div>
-
-                        <div class="totalsPanelRow">
-                            <div class="orderNumber">2</div>
-                            <div class="leftColumn">Diet Coke</div>
-                            <div class="rightColumn">2.00</div>
+                        <div class="totalsPanelRow" ng-repeat="(name, entry) in itemsInOrder">
+                            <div class="orderNumber">{{entry.quantity}}</div>
+                            <div class="leftColumn">{{name}}</div>
+                            <div class="rightColumn">{{entry.item.price}}</div>
                         </div>
                     </div>
                     <div id="totalsPanel">

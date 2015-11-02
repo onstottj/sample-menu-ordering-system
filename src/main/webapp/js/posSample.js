@@ -9,6 +9,19 @@ var baseUrl = "http://localhost:8080/api/";
 angular.module('posApp', ['ngFileUpload'])
     .controller('OrderEntryController', function ($scope, $http) {
         $scope.allItems = [];
+        // A dictionary of the items in the order; see http://stackoverflow.com/questions/11985863/how-to-use-ng-repeat-for-dictionaries-in-angularjs
+        $scope.itemsInOrder = {};
+
+        $scope.addItem = function (item) {
+            var itemName = item.name;
+
+            var existingItem = $scope.itemsInOrder[itemName];
+
+            var newItem = existingItem || {item: item, quantity: 0};
+            newItem.quantity++;
+
+            $scope.itemsInOrder[itemName] = newItem;
+        };
 
         // Load the list of menu items
         $http.get(baseUrl + 'items').success(function (data) {
