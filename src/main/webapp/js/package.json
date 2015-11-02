@@ -1,0 +1,16 @@
+{
+  "name": "js",
+  "version": "1.0.0",
+  "description": "Sample Angular / Spring App",
+  "main": "posSample.js",
+  "dependencies": {
+    "angular": "^1.4.7",
+    "ng-file-upload": "^9.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jon Onstott",
+  "license": "ISC"
+}

@@ -8,17 +8,20 @@ import java.math.BigDecimal;
  */
 public class Item {
 
-    private final long id;
+    /**
+     * Can be null if this item hasn't been persisted yet
+     */
+    private final Long id;
     private final String name;
     private final BigDecimal price;
 
-    public Item(long id, String name, BigDecimal price) {
+    public Item(Long id, String name, BigDecimal price) {
         this.id = id;
         this.name = name;
         this.price = price;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

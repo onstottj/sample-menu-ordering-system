@@ -18,7 +18,8 @@ Thumbs.db
 target/
 *.pom.xml.versionsBackup
 
-# Build
+# Misc
 builds/
 out/
 dist/
+node_modules
