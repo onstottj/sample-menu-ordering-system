@@ -22,7 +22,8 @@
 #orderSidebar {
     display: flex;
     flex-direction: column;
-    width: 250px;
+    /* This is the width of the sidebar */
+    width: 300px;
     flex-shrink: 0;
 }
 
@@ -30,13 +31,12 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    height: 400px;
-    border: 1px solid black;
+    /* This is the height of the sidebar */
+    min-height: 450px;
 }
 
 #orderItemsList {
     flex-grow: 1;
-    overflow-y: auto;
 }
 
 #totalsPanel {
@@ -46,7 +46,7 @@
 
 .totalsPanelRow {
     display: flex;
-    padding: 4px 10px;
+    padding: 4px 0;
 }
 
 .selectedRow {
