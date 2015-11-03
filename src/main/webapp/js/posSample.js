@@ -34,6 +34,14 @@ posModule.service('orderPersistence', function ($http, $q) {
         addItemToOrder: addItemToOrder,
         removeItemFromOrder: function (orderId, itemId) {
             $http.delete(baseUrl + "orders/" + orderId + "/items/" + itemId);
+        },
+        recordPayment: function (orderId, amountTendered, changeDue) {
+            var tenderRecord = {
+                orderId: orderId,
+                amountTendered: amountTendered,
+                changeDue: changeDue
+            };
+            $http.post(baseUrl + "orders/" + orderId + "/tender", tenderRecord);
         }
     };
 });
@@ -60,6 +68,9 @@ posModule.service('orderStatus', function ($http, orderPersistence) {
     }
 
     return {
+        getOrderId: function () {
+            return orderId;
+        },
         itemsInOrder: itemsInOrder,
         addItem: function (item) {
             var itemName = item.name;
@@ -133,7 +144,7 @@ posModule.controller('OrderEntryController', function ($scope, $http, $uibModal,
     });
 });
 
-posModule.controller('TenderPaymentController', function ($scope, $uibModalInstance, orderStatus) {
+posModule.controller('TenderPaymentController', function ($scope, $uibModalInstance, orderStatus, orderPersistence) {
     // Proxy some orderStatus values/functions
     $scope.getGrandTotal = orderStatus.getGrandTotal;
 
@@ -155,8 +166,13 @@ posModule.controller('TenderPaymentController', function ($scope, $uibModalInsta
     };
 
     $scope.submitPayment = function () {
-        orderStatus.paymentResults.amountTendered = $scope.amountTendered;
-        orderStatus.paymentResults.changeDue = $scope.getChangeDue();
+        var amountTendered = $scope.amountTendered;
+        var changeDue = $scope.getChangeDue();
+
+        orderStatus.paymentResults.amountTendered = amountTendered;
+        orderStatus.paymentResults.changeDue = changeDue;
+
+        orderPersistence.recordPayment(orderStatus.getOrderId(), amountTendered, changeDue);
 
         $uibModalInstance.close();
     };

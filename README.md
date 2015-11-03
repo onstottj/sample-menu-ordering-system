@@ -18,15 +18,16 @@
 Overview
 --------
 
-This is a sample AngularJS restaurant point-of-sale web app, with a REST backend written in Spring.  It uses Spring
-Boot, so to run it, the main class is `com.reonsoftware.possample.Application`.
+This is a sample restaurant point-of-sale system, written in Angular with a Spring REST backend.
+It uses Spring Boot, so to run it, the main class is `com.reonsoftware.possample.Application`.
 
 Installation
 ------------
 
  - The database used is MySQL, and the DDL is in database.sql in this directory
- - The database name is 'pos', with a user 'pos' with password 'pos'.  These details are hard-coded in
-   com.reonsoftware.possample.Application for now.
+ - The database name is 'pos', with a user 'pos' with password 'pos'.  These details are hard-coded 
+   in com.reonsoftware.possample.Application for now.
+ - The project was created using IntelliJ and Maven
 
 Caveats
 -------
