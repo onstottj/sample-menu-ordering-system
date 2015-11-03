@@ -1,5 +1,8 @@
 package com.reonsoftware.possample.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
@@ -8,17 +11,20 @@ import java.util.List;
  */
 public class Order {
 
-    private final int id;
+    private final Long id;
     private final Integer orderNumber;
     private final List<Item> items;
 
-    public Order(int id, Integer orderNumber, List<Item> items) {
+    @JsonCreator
+    public Order(@JsonProperty("id") Long id,
+                 @JsonProperty("orderNumber") Integer orderNumber,
+                 @JsonProperty("items") List<Item> items) {
         this.id = id;
         this.orderNumber = orderNumber;
         this.items = items;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 

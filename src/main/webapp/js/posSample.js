@@ -8,11 +8,25 @@ var baseUrl = "http://localhost:8080/api/";
 
 var posModule = angular.module('posApp', ['ui.bootstrap', 'ngFileUpload']);
 
-posModule.service('orderStatusService', function () {
+posModule.service('orderStatusService', function ($http) {
+    // This is set once the order has been created in the backend
+    var orderId;
     // A dictionary of the items in the order; see http://stackoverflow.com/questions/11985863/how-to-use-ng-repeat-for-dictionaries-in-angularjs
     var itemsInOrder = {};
     // When payment is processed, this becomes a JSON object with amountTendered and changeDue
     var paymentResults = {};
+
+    function createOrder(initialItem) {
+        // Create an empty order, retrieving the order ID from the AJAX call
+        var newOrder = {id: null, orderNumber: null, items: []};
+        $http.post(baseUrl + "orders", newOrder)
+            .then(function (response) {
+                orderId = response.data;
+
+                // Now add the initial item to the order
+                $http.post(baseUrl + "orders/" + orderId + "/items", {itemId: initialItem.id});
+            });
+    }
 
     function getSubtotal() {
         var subtotal = 0;
@@ -29,44 +43,51 @@ posModule.service('orderStatusService', function () {
 
     return {
         itemsInOrder: itemsInOrder,
-        paymentResults: paymentResults,
+        addItem: function (item) {
+            var itemName = item.name;
+
+            var existingItem = itemsInOrder[itemName];
+
+            var newItem = existingItem || {item: item, quantity: 0};
+            newItem.quantity++;
+
+            itemsInOrder[itemName] = newItem;
+
+            // Update the backend as needed
+            if (!orderId) {
+                createOrder(item);
+            }
+        },
+        removeItem: function (item) {
+            delete itemsInOrder[item.name];
+        },
         getSubtotal: getSubtotal,
         getSalesTax: getSalesTax,
         getGrandTotal: function () {
             return getSubtotal() + getSalesTax();
-        }
+        },
+        paymentResults: paymentResults
     };
 });
 
 posModule.controller('OrderEntryController', function ($scope, $http, $uibModal, orderStatusService) {
-    // Make some values available to the view
+    // Proxy some orderStatusService values/functions
     $scope.itemsInOrder = orderStatusService.itemsInOrder;
-    $scope.paymentResults = orderStatusService.paymentResults;
+    $scope.addItem = orderStatusService.addItem;
     $scope.getSubtotal = orderStatusService.getSubtotal;
     $scope.getSalesTax = orderStatusService.getSalesTax;
     $scope.getGrandTotal = orderStatusService.getGrandTotal;
+    $scope.paymentResults = orderStatusService.paymentResults;
 
     $scope.allItems = [];
     $scope.selectedItem = null;
-
-    $scope.addItem = function (item) {
-        var itemName = item.name;
-
-        var existingItem = orderStatusService.itemsInOrder[itemName];
-
-        var newItem = existingItem || {item: item, quantity: 0};
-        newItem.quantity++;
-
-        orderStatusService.itemsInOrder[itemName] = newItem;
-    };
 
     $scope.selectItem = function (item) {
         $scope.selectedItem = item;
     };
 
     $scope.voidSelectedItem = function () {
-        var item = $scope.selectedItem;
-        delete orderStatusService.itemsInOrder[item.name];
+        orderStatusService.removeItem($scope.selectedItem);
         $scope.selectedItem = null;
     };
 
@@ -90,7 +111,7 @@ posModule.controller('OrderEntryController', function ($scope, $http, $uibModal,
 });
 
 posModule.controller('TenderPaymentController', function ($scope, $uibModalInstance, orderStatusService) {
-    // Make some values available to the view
+    // Proxy some orderStatusService values/functions
     $scope.getGrandTotal = orderStatusService.getGrandTotal;
 
     $scope.amountTendered = 0;
@@ -110,11 +131,9 @@ posModule.controller('TenderPaymentController', function ($scope, $uibModalInsta
         return isFinite($scope.getChangeDue());
     };
 
-
     $scope.submitPayment = function () {
         orderStatusService.paymentResults.amountTendered = $scope.amountTendered;
         orderStatusService.paymentResults.changeDue = $scope.getChangeDue();
-        // TODO: ajax
 
         $uibModalInstance.close();
     };

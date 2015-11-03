@@ -47,7 +47,7 @@ public class ItemController {
         if (!file.isEmpty()) {
             try {
                 List<Item> parsedItems = parseItemsCsv(file);
-                parsedItems.forEach(itemDao::insertItem);
+                parsedItems.forEach(itemDao::createItem);
                 LOGGER.info("Imported " + parsedItems.size() + " items from a CSV file");
             } catch (IOException e) {
                 LOGGER.error("Failed to import items from a CSV file", e);

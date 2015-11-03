@@ -24,7 +24,7 @@ public class ItemDao {
         return jdbcTemplate.query("SELECT item_id, name, price FROM items", new ItemMapper());
     }
 
-    public void insertItem(Item item) {
+    public void createItem(Item item) {
         jdbcTemplate.update("INSERT INTO items(name, price) VALUES (?,?)", item.getName(), item.getPrice());
     }
 
