@@ -24,137 +24,143 @@
 </head>
 <body ng-app="posApp">
 
-<div ng-controller="OrderEntryController">
-    <form>
+<div ng-controller="OrderEntryController"
+     class="panel panel-default">
+
+    <div class="panel-heading">
         <h4>Order entry</h4>
+    </div>
 
-        <div>
-            <button id="viewOrdersButton"
-                    class="btn btn-default smallHorizontalMargin">
-                ORDERS
-            </button>
-        </div>
-
-        <div id="itemsAndSummaryContainer">
-            <div id="itemsList">
-                <button class="itemButton smallMargin" ng-repeat="item in allItems" ng-click="addItem(item)">
-                    {{item.name}}
+    <div class="panel-body">
+        <form>
+            <div>
+                <button id="viewOrdersButton"
+                        class="btn btn-default smallHorizontalMargin">
+                    ORDERS
                 </button>
             </div>
 
-            <div id="orderSidebar" class="smallMargin">
-                <div>
-                    <!-- TODO.  Also, pad order # with zeros -->
-                    New Order / Order #099
-                </div>
-
-                <!-- The list of items in this order -->
-                <div id="orderItemsPanel" class="well">
-                    <div id="orderItemsList">
-                        <div class="totalsPanelRow {{entry.item == selectedItem ? 'selectedRow' : ''}}"
-                             style="cursor:pointer;"
-                             ng-repeat="(name, entry) in itemsInOrder"
-                             ng-click="selectItem(entry.item)">
-
-                            <div class="orderNumber">{{entry.quantity}}</div>
-                            <div class="summaryLeftColumn">{{name}}</div>
-                            <div class="summaryRightColumn">{{entry.item.price | currency}}</div>
-                        </div>
-                    </div>
-                    <div id="totalsPanel">
-                        <div class="totalsPanelRow">
-                            <div class="summaryLeftColumn">Subtotal:</div>
-                            <div class="summaryRightColumn" ng-bind="getSubtotal() | currency"></div>
-                        </div>
-
-                        <div class="totalsPanelRow">
-                            <div class="summaryLeftColumn">Sales Tax:</div>
-                            <div class="summaryRightColumn" ng-bind="getSalesTax() | currency"></div>
-                        </div>
-
-                        <div class="totalsPanelRow">
-                            <div class="summaryLeftColumn">Grand Total:</div>
-                            <div class="summaryRightColumn" ng-bind="getGrandTotal() | currency"></div>
-                        </div>
-                    </div>
-                    <div id="paymentResultsPanel"
-                         ng-show="isPaymentComplete()">
-                        <div class="totalsPanelRow">
-                            <div class="summaryLeftColumn">Amount tendered:</div>
-                            <div class="summaryRightColumn" ng-bind="paymentResults.amountTendered | currency"></div>
-                        </div>
-                        <div class="totalsPanelRow">
-                            <div class="summaryLeftColumn">Change due:</div>
-                            <div class="summaryRightColumn" ng-bind="paymentResults.changeDue | currency"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="smallVerticalMargin">
-                    <button id="voidOrderButton"
-                            class="btn btn-danger"
-                            ng-disabled="!selectedItem || isPaymentComplete()"
-                            ng-click="voidSelectedItem()">
-                        VOID
-                    </button>
-                    <button id="payNowButton"
-                            class="btn btn-primary"
-                            ng-disabled="getSubtotal() == 0 || isPaymentComplete()"
-                            ng-click="startPaying()">
-                        PAY NOW
+            <div id="itemsAndSummaryContainer">
+                <div id="itemsList">
+                    <button class="itemButton smallMargin" ng-repeat="item in allItems" ng-click="addItem(item)">
+                        {{item.name}}
                     </button>
                 </div>
+
+                <div id="orderSidebar" class="smallMargin">
+                    <div>
+                        <!-- TODO.  Also, pad order # with zeros -->
+                        New Order / Order #099
+                    </div>
+
+                    <!-- The list of items in this order -->
+                    <div id="orderItemsPanel" class="well">
+                        <div id="orderItemsList">
+                            <div class="totalsPanelRow {{entry.item == selectedItem ? 'selectedRow' : ''}}"
+                                 style="cursor:pointer;"
+                                 ng-repeat="(name, entry) in itemsInOrder"
+                                 ng-click="selectItem(entry.item)">
+
+                                <div class="orderNumber">{{entry.quantity}}</div>
+                                <div class="summaryLeftColumn">{{name}}</div>
+                                <div class="summaryRightColumn">{{entry.item.price | currency}}</div>
+                            </div>
+                        </div>
+                        <div id="totalsPanel">
+                            <div class="totalsPanelRow">
+                                <div class="summaryLeftColumn">Subtotal:</div>
+                                <div class="summaryRightColumn" ng-bind="getSubtotal() | currency"></div>
+                            </div>
+
+                            <div class="totalsPanelRow">
+                                <div class="summaryLeftColumn">Sales Tax:</div>
+                                <div class="summaryRightColumn" ng-bind="getSalesTax() | currency"></div>
+                            </div>
+
+                            <div class="totalsPanelRow">
+                                <div class="summaryLeftColumn">Grand Total:</div>
+                                <div class="summaryRightColumn" ng-bind="getGrandTotal() | currency"></div>
+                            </div>
+                        </div>
+                        <div id="paymentResultsPanel"
+                             ng-show="isPaymentComplete()">
+                            <div class="totalsPanelRow">
+                                <div class="summaryLeftColumn">Amount tendered:</div>
+                                <div class="summaryRightColumn"
+                                     ng-bind="paymentResults.amountTendered | currency"></div>
+                            </div>
+                            <div class="totalsPanelRow">
+                                <div class="summaryLeftColumn">Change due:</div>
+                                <div class="summaryRightColumn" ng-bind="paymentResults.changeDue | currency"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="smallVerticalMargin">
+                        <button id="voidOrderButton"
+                                class="btn btn-danger"
+                                ng-disabled="!selectedItem || isPaymentComplete()"
+                                ng-click="voidSelectedItem()">
+                            VOID
+                        </button>
+                        <button id="payNowButton"
+                                class="btn btn-primary"
+                                ng-disabled="getSubtotal() == 0 || isPaymentComplete()"
+                                ng-click="startPaying()">
+                            PAY NOW
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Tender Payment dialog -->
-        <script type="text/ng-template" id="tenderPaymentDialog.html">
-            <div class="modal-header">
-                <h3 class="modal-title">TENDER PAYMENT</h3>
-            </div>
-            <div class="modal-body">
+            <!-- Tender Payment dialog -->
+            <script type="text/ng-template" id="tenderPaymentDialog.html">
+                <div class="modal-header">
+                    <h3 class="modal-title">TENDER PAYMENT</h3>
+                </div>
+                <div class="modal-body">
 
-                <table id="paymentDialog" class="centeredTable">
-                    <tr>
-                        <td>
-                            <table class="centeredTable">
-                                <tr>
-                                    <td class="paymentDialogLeftColumn">Amount Due:</td>
-                                    <td ng-bind="getGrandTotal() | currency"></td>
-                                </tr>
-                                <tr>
-                                    <td class="paymentDialogLeftColumn">Amount Tendered:</td>
-                                    <td>
-                                        <input id="txtAmountTendered"
-                                               type="text"
-                                               ng-model="amountTendered"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="paymentDialogLeftColumn">Change Due:</td>
-                                    <td ng-bind="getChangeDue() | currency"></td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
+                    <table id="paymentDialog" class="centeredTable">
+                        <tr>
+                            <td>
+                                <table class="centeredTable">
+                                    <tr>
+                                        <td class="paymentDialogLeftColumn">Amount Due:</td>
+                                        <td ng-bind="getGrandTotal() | currency"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="paymentDialogLeftColumn">Amount Tendered:</td>
+                                        <td>
+                                            <input id="txtAmountTendered"
+                                                   type="text"
+                                                   ng-model="amountTendered"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="paymentDialogLeftColumn">Change Due:</td>
+                                        <td ng-bind="getChangeDue() | currency"></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
 
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-default"
-                        ng-click="cancelPayment()">
-                    CANCEL
-                </button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default"
+                            ng-click="cancelPayment()">
+                        CANCEL
+                    </button>
 
-                <button class="btn btn-primary"
-                        ng-disabled="!isPaymentValid()"
-                        ng-click="submitPayment()">
-                    TENDER
-                </button>
-            </div>
-        </script>
-
-    </form>
+                    <button class="btn btn-primary"
+                            ng-disabled="!isPaymentValid()"
+                            ng-click="submitPayment()">
+                        TENDER
+                    </button>
+                </div>
+            </script>
+        </form>
+    </div>
 </div>
 
 <hr/>

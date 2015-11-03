@@ -22,10 +22,17 @@ posModule.service('orderStatusService', function ($http) {
         $http.post(baseUrl + "orders", newOrder)
             .then(function (response) {
                 orderId = response.data;
-
-                // Now add the initial item to the order
-                $http.post(baseUrl + "orders/" + orderId + "/items", {itemId: initialItem.id});
+                console.log("got back order id ", + orderId);
+                addItemToOrder(orderId, initialItem.id);
             });
+    }
+
+    /**
+     * @returns {*} a Promise so that further action can be taken if desired
+     */
+    function addItemToOrder(orderId, itemId) {
+        console.log("attempting to add item " + itemId);
+        return $http.post(baseUrl + "orders/" + orderId + "/items", {itemId: itemId});
     }
 
     function getSubtotal() {
