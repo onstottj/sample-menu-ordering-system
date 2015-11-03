@@ -34,4 +34,27 @@ public class OrderController {
         orderDao.addItemToOrder(orderId, itemId);
     }
 
+    /**
+     * Changes an item's quantity for an order.
+     *
+     * TODO: with this URL, you'd typically be updating the whole Item object
+     */
+    @RequestMapping(value = "/api/orders/{orderId}/items/{itemId}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public void updateItemQuantity(@PathVariable("orderId") long orderId,
+                                   @PathVariable("itemId") long itemId,
+                                   @RequestParam("quantity") int quantity) {
+        orderDao.updateItemQuantity(orderId, itemId, quantity);
+    }
+
+    /**
+     * Removes the item from the order completely (no matter what the quantity is)
+     */
+    @RequestMapping(value = "/api/orders/{orderId}/items/{itemId}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteItemFromOrder(@PathVariable("orderId") long orderId,
+                                    @PathVariable("itemId") long itemId) {
+        orderDao.deleteItemFromOrder(orderId, itemId);
+    }
+
 }
