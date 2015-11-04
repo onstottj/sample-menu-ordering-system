@@ -24,15 +24,12 @@ Bootstrap adds some UI styling and Flexbox (CSS3) is used for most of the layout
 Installation
 ------------
 
-1)  Install MySQL 5.6.5 or later (due to http://stackoverflow.com/a/10603198/132374).
-
-2)  Execute the database.sql DDL to set up the tables
-
-3)  You can change the DB connection details in `com.reonsoftware.possample.Application`   
-
-4)  Spring Boot is used as the server, and the main class is `com.reonsoftware.possample.Application`.
-    Start the server and browse to index.html.  Use the CSV import feature to import the contents of items.csv
-    (in this folder) into the items table.
+1. Install MySQL 5.6.5 or later (due to http://stackoverflow.com/a/10603198/132374).
+2. Execute the database.sql DDL to set up the tables
+3. You can change the DB connection details in `com.reonsoftware.possample.Application`   
+4. Spring Boot is used as the server, and the main class is `com.reonsoftware.possample.Application`.
+   Start the server and browse to index.html.  Use the CSV import feature to import the contents of items.csv
+   (in this folder) into the items table.
 
 Also:
 
