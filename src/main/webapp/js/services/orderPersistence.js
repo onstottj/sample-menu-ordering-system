@@ -25,13 +25,17 @@ posModule.service('orderPersistence', function ($http, $q) {
                     });
             });
         },
+
         addItemToOrder: addItemToOrder,
+
         removeItemFromOrder: function (orderId, itemId) {
             $http.delete(baseUrl + "orders/" + orderId + "/items/" + itemId);
         },
+
         assignOrderNumber: function (orderId) {
             return $http.get(baseUrl + "orders/" + orderId + "/assignOrderNumber");
         },
+
         recordPayment: function (orderId, amountTendered, changeDue) {
             var tenderRecord = {
                 orderId: orderId,

@@ -2,10 +2,11 @@
  * @author Jon Onstott
  * @since 11/1/2015
  */
-posModule.controller('OrderEntryController', function ($scope, $http, $uibModal, viewManager, orderStatus) {
+posModule.controller('OrderEntryController', function ($scope, $http, $uibModal, viewManager, orderStatus, orderPersistence) {
     // Proxy some orderStatus values/functions.  Maybe there's a better way to do this (like wrapping these in an object)?
     $scope.isShowingList = viewManager.isShowingList;
     $scope.setIsShowingList = viewManager.setIsShowingList;
+    $scope.hasOrderNumber = orderStatus.hasOrderNumber;
     $scope.getOrderNumber = orderStatus.getOrderNumber;
     $scope.itemsInOrder = orderStatus.itemsInOrder;
     $scope.addItem = orderStatus.addItem;
@@ -13,10 +14,6 @@ posModule.controller('OrderEntryController', function ($scope, $http, $uibModal,
     $scope.getSalesTax = orderStatus.getSalesTax;
     $scope.getGrandTotal = orderStatus.getGrandTotal;
     $scope.paymentResults = orderStatus.paymentResults;
-
-    $scope.hasOrderNumber = function () {
-        return isFinite(orderStatus.getOrderNumber());
-    };
 
     $scope.allItems = [];
     $scope.selectedItem = null;
@@ -31,6 +28,12 @@ posModule.controller('OrderEntryController', function ($scope, $http, $uibModal,
     };
 
     $scope.startPaying = function () {
+        // Assign the order number now that the user is ready to do payment
+        orderPersistence.assignOrderNumber(orderStatus.getOrderId())
+            .then(function (response) {
+                orderStatus.setOrderNumber(response.data);
+            });
+
         $uibModal.open({
             animation: true,
             templateUrl: 'tenderPaymentDialog.html',

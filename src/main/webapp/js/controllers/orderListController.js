@@ -2,7 +2,7 @@
  * @author Jon Onstott
  * @since 11/3/2015
  */
-posModule.controller('OrderListController', function ($scope, $http, viewManager) {
+posModule.controller('OrderListController', function ($scope, $http, orderStatus, viewManager) {
     // Proxy some orderStatus values/functions.  Maybe there's a better way to do this (like wrapping these in an object)?
     $scope.isShowingList = viewManager.isShowingList;
 
@@ -39,6 +39,12 @@ posModule.controller('OrderListController', function ($scope, $http, viewManager
         return status;
     };
 
+    $scope.hasOrderNumber = function (order) {
+        return order.orderNumber && isFinite(order.orderNumber);
+    };
+
+    // TODO: move this order retrieval code into its own service
+
     var orderRetrievalPromise;
     var retrieveAfterPromiseCompletes = false;
 
@@ -49,13 +55,13 @@ posModule.controller('OrderListController', function ($scope, $http, viewManager
 
     function retrieveOrders() {
         if (!orderRetrievalPromise) {
+            // We're not loading order data at the moment
+
             if (!shouldLoadOrders()) {
                 $scope.allOrders = [];
                 retrieveAfterPromiseCompletes = false;
                 return;
             }
-
-            // We're not loading order data yet
 
             var filterOnOrderNumber = $scope.showInProgressOrders !== $scope.showUnpaidOrders;
             var filterOnTendered = $scope.showUnpaidOrders !== $scope.showPaidOrders;
@@ -81,4 +87,14 @@ posModule.controller('OrderListController', function ($scope, $http, viewManager
 
     // When the filters change, refresh the list of orders
     $scope.$watchGroup(['showInProgressOrders', 'showUnpaidOrders', 'showPaidOrders'], retrieveOrders);
+
+    $scope.startNewOrder = function () {
+        orderStatus.startNewOrder();
+        viewManager.setIsShowingList(false);
+    };
+
+    $scope.openOrder = function (order) {
+        orderStatus.editOrder(order);
+        viewManager.setIsShowingList(false);
+    };
 });

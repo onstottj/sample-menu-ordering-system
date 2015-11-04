@@ -21,7 +21,7 @@
                 PAID
             </button>
             <div id="orderListButtonSpacer"></div>
-            <button id="newOrderButton" class="btn btn-default smallHorizontalMargin">
+            <button id="newOrderButton" class="btn btn-default smallHorizontalMargin" ng-click="startNewOrder()">
                 NEW ORDER
             </button>
         </div>
@@ -33,10 +33,12 @@
                 <th>Order Number</th>
                 <th>Total</th>
             </tr>
-            <tr ng-repeat="order in allOrders">
+            <tr ng-repeat="order in allOrders"
+                ng-click="openOrder(order)">
                 <td ng-bind="determineOrderStatus(order)"></td>
                 <td ng-bind="order.numberAssignDate"></td>
-                <td ng-bind="order.orderNumber"></td>
+                <td ng-show="hasOrderNumber(order)">#{{order.orderNumber | padWithLeadingZeros:3}}</td>
+                <td ng-hide="hasOrderNumber(order)"></td>
                 <td ng-bind="order.totalDue | currency"></td>
             </tr>
         </table>

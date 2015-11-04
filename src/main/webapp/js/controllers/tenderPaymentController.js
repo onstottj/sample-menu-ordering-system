@@ -32,12 +32,6 @@ posModule.controller('TenderPaymentController', function ($scope, $uibModalInsta
 
         orderPersistence.recordPayment(orderStatus.getOrderId(), amountTendered, changeDue);
 
-        // Assign the order number after we've created it in the backend
-        orderPersistence.assignOrderNumber(orderStatus.getOrderId())
-            .then(function (response) {
-                orderStatus.setOrderNumber(response.data);
-            });
-
         $uibModalInstance.close();
     };
 

@@ -8,6 +8,7 @@ posModule.service('viewManager', function () {
         isShowingList: function () {
             return isShowingList;
         },
+
         setIsShowingList: function (isShowingListNow) {
             isShowingList = isShowingListNow;
         }

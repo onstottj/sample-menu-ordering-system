@@ -17,6 +17,17 @@ posModule.service('orderStatus', function ($http, orderPersistence) {
         salesTaxRate = response.data;
     });
 
+    function clearItems() {
+        angular.forEach(itemsInOrder, function (entry, key) {
+            delete itemsInOrder[key];
+        });
+    }
+
+    function clearPaymentDetails() {
+        delete paymentResults.amountTendered;
+        delete paymentResults.changeDue;
+    }
+
     function getSubtotal() {
         var subtotal = 0;
         angular.forEach(itemsInOrder, function (entry) {
@@ -30,16 +41,49 @@ posModule.service('orderStatus', function ($http, orderPersistence) {
     }
 
     return {
+        startNewOrder: function () {
+            orderId = null;
+            orderNumber = null;
+            clearItems();
+            clearPaymentDetails();
+        },
+
+        editOrder: function (order) {
+            orderId = order.id;
+            orderNumber = order.orderNumber;
+
+            clearItems();
+            angular.forEach(order.lineItems, function (lineItem) {
+                var itemName = lineItem.item.name;
+                itemsInOrder[itemName] = {
+                    item: lineItem.item,
+                    quantity: lineItem.quantity
+                };
+            });
+
+            var tender = order.tender;
+            paymentResults.amountTendered = tender && tender.amountTendered;
+            paymentResults.changeDue = tender && tender.changeDue;
+        },
+
         getOrderId: function () {
             return orderId;
         },
+
+        hasOrderNumber: function () {
+            return isFinite(orderNumber);
+        },
+
         getOrderNumber: function () {
             return orderNumber;
         },
+
         setOrderNumber: function (newOrderNumber) {
             orderNumber = newOrderNumber;
         },
+
         itemsInOrder: itemsInOrder,
+
         addItem: function (item) {
             var itemName = item.name;
 
@@ -59,15 +103,20 @@ posModule.service('orderStatus', function ($http, orderPersistence) {
                 orderPersistence.addItemToOrder(orderId, item.id);
             }
         },
+
         removeItem: function (item) {
             delete itemsInOrder[item.name];
             orderPersistence.removeItemFromOrder(orderId, item.id);
         },
+
         getSubtotal: getSubtotal,
+
         getSalesTax: getSalesTax,
+
         getGrandTotal: function () {
             return getSubtotal() + getSalesTax();
         },
+
         paymentResults: paymentResults
     };
 });
