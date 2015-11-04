@@ -1,7 +1,6 @@
 package com.reonsoftware.possample.models;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,7 +12,7 @@ public class DetailedOrder extends Order {
     private final BigDecimal totalDue;
     private final Tender tender;
 
-    public DetailedOrder(long id, Integer orderNumber, Date numberAssignDate, List<DetailedLineItem> lineItems, BigDecimal totalDue, Tender tender) {
+    public DetailedOrder(long id, Integer orderNumber, String numberAssignDate, List<DetailedLineItem> lineItems, BigDecimal totalDue, Tender tender) {
         super(id, orderNumber, numberAssignDate);
         this.lineItems = lineItems;
         this.totalDue = totalDue;

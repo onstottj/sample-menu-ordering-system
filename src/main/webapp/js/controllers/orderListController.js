@@ -28,7 +28,7 @@ posModule.controller('OrderListController', function ($scope, $http, viewManager
 
     $scope.determineOrderStatus = function (order) {
         var status = "";
-        if (order.orderNumber) {
+        if (!order.orderNumber) {
             status += "IN PROGRESS ";
         }
         if (order.tender) {
@@ -59,10 +59,10 @@ posModule.controller('OrderListController', function ($scope, $http, viewManager
 
             var filterOnOrderNumber = $scope.showInProgressOrders !== $scope.showUnpaidOrders;
             var filterOnTendered = $scope.showUnpaidOrders !== $scope.showPaidOrders;
-            var requireOrderNumberParam = filterOnOrderNumber ? "requireOrderNumber=" + $scope.showUnpaidOrders : "";
-            var requireIsTenderedParam = filterOnTendered ? "requireIsTendered=" + $scope.showPaidOrders : "";
+            var hasOrderNumberParam = filterOnOrderNumber ? "hasOrderNumber=" + $scope.showUnpaidOrders : "";
+            var isTenderedParam = filterOnTendered ? "isTendered=" + $scope.showPaidOrders : "";
             // TODO: remove '?' and '&' if we don't need them
-            orderRetrievalPromise = $http.get(baseUrl + "orders?" + requireOrderNumberParam + "&" + requireIsTenderedParam);
+            orderRetrievalPromise = $http.get(baseUrl + "orders?" + hasOrderNumberParam + "&" + isTenderedParam);
             orderRetrievalPromise.then(function (response) {
                 orderRetrievalPromise = null;
                 if (!retrieveAfterPromiseCompletes) {

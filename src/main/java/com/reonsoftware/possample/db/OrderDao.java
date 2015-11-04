@@ -16,6 +16,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import java.util.List;
 @Component
 public class OrderDao {
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy h:mm a");
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderDao.class);
 
     @Autowired
@@ -45,8 +47,13 @@ public class OrderDao {
                 (!filterSql.isEmpty() ? " WHERE " + filterSql : "");
         return jdbcTemplate.query(orderSql, (orderRs, rowNum) -> {
             long orderId = orderRs.getLong("order_id");
-            int orderNumber = orderRs.getInt("order_number");
-            Date numberAssignDate = orderRs.getDate("number_assign_date");
+
+            Integer orderNumber = orderRs.getInt("order_number");
+            orderNumber = orderRs.wasNull() ? null : orderNumber;
+
+            Date numberAssignDate = orderRs.getTimestamp("number_assign_date");
+            String formattedDate = numberAssignDate != null ? DATE_FORMAT.format(numberAssignDate) : null;
+
             List<DetailedLineItem> lineItems = itemDao.getDetailedLineItems(orderId);
 
             BigDecimal amountTendered = orderRs.getBigDecimal("tender.amount_tendered");
@@ -57,15 +64,22 @@ public class OrderDao {
 
             BigDecimal totalDue = calculateTotalDue(lineItems);
 
-            return new DetailedOrder(orderId, orderNumber, numberAssignDate, lineItems, totalDue, tender);
+            return new DetailedOrder(orderId, orderNumber, formattedDate, lineItems, totalDue, tender);
         });
     }
 
+    /**
+     * @return the price of all of the items, including sales tax, or null if there aren't any items
+     */
     private BigDecimal calculateTotalDue(List<DetailedLineItem> lineItems) {
+        if (lineItems.isEmpty())
+            return null;
+
         BigDecimal total = new BigDecimal(0);
         for (DetailedLineItem lineItem : lineItems) {
             total = total.add(lineItem.getExtendedPrice());
         }
+
         BigDecimal tax = total.multiply(new BigDecimal(SettingsController.SALES_TAX_RATE));
         return total.add(tax);
     }

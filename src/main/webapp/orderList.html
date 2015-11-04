@@ -37,7 +37,7 @@
                 <td ng-bind="determineOrderStatus(order)"></td>
                 <td ng-bind="order.numberAssignDate"></td>
                 <td ng-bind="order.orderNumber"></td>
-                <td ng-bind="order.totalDue"></td>
+                <td ng-bind="order.totalDue | currency"></td>
             </tr>
         </table>
 

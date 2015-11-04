@@ -21,9 +21,9 @@ public class OrderController {
     private OrderDao orderDao;
 
     @RequestMapping(value = "/api/orders", method = RequestMethod.GET)
-    public List<DetailedOrder> getOrders(@RequestParam(value = "requireOrderNumber", required = false) Boolean requireOrderNumber,
-                                         @RequestParam(value = "requireIsTendered", required = false) Boolean requireIsTendered) {
-        return orderDao.getOrders(new OrderFilter(requireOrderNumber, requireIsTendered));
+    public List<DetailedOrder> getOrders(@RequestParam(value = "hasOrderNumber", required = false) Boolean hasOrderNumber,
+                                         @RequestParam(value = "isTendered", required = false) Boolean isTendered) {
+        return orderDao.getOrders(new OrderFilter(hasOrderNumber, isTendered));
     }
 
     /**

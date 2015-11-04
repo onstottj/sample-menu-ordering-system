@@ -14,40 +14,40 @@ public class OrderFilter {
     /**
      * If null, we won't filter based on the order number
      */
-    private final Boolean requireOrderNumber;
+    private final Boolean hasOrderNumber;
     /**
      * If null, we won't filter based on whether or not the order is tendered
      */
-    private final Boolean requireIsTendered;
+    private final Boolean isTendered;
 
     @JsonCreator
-    public OrderFilter(@JsonProperty("requireOrderNumber") Boolean requireOrderNumber,
-                       @JsonProperty("requireIsTendered") Boolean requireIsTendered) {
-        this.requireOrderNumber = requireOrderNumber;
-        this.requireIsTendered = requireIsTendered;
+    public OrderFilter(@JsonProperty("hasOrderNumber") Boolean hasOrderNumber,
+                       @JsonProperty("isTendered") Boolean isTendered) {
+        this.hasOrderNumber = hasOrderNumber;
+        this.isTendered = isTendered;
     }
 
-    public Boolean getRequireOrderNumber() {
-        return requireOrderNumber;
+    public Boolean getHasOrderNumber() {
+        return hasOrderNumber;
     }
 
-    public Boolean getRequireIsTendered() {
-        return requireIsTendered;
+    public Boolean getIsTendered() {
+        return isTendered;
     }
 
     public String getFilterSql() {
         List<String> filters = new ArrayList<>();
 
-        if (requireIsTendered != null) {
+        if (isTendered != null) {
             String existsSubquery = "(SELECT * FROM tender WHERE tender.order_id = orders.order_id)";
-            if (requireIsTendered)
+            if (isTendered)
                 filters.add("EXISTS " + existsSubquery);
             else
                 filters.add("NOT EXISTS " + existsSubquery);
         }
 
-        if (requireOrderNumber != null) {
-            if (requireOrderNumber)
+        if (hasOrderNumber != null) {
+            if (hasOrderNumber)
                 filters.add("order_number IS NOT NULL");
             else
                 filters.add("order_number IS NULL");
