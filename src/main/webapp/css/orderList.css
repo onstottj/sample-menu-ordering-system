@@ -10,3 +10,7 @@
     align-self: flex-end;
 }
 
+#noOrdersWarning {
+    font-style: italic;
+    font-weight: bold;
+}

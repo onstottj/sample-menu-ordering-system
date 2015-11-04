@@ -4,12 +4,45 @@
 
     <div class="panel-body">
         <div id="orderListButtonContainer">
-            <button class="btn btn-info smallHorizontalMargin">ALL</button>
-            <button class="btn btn-default smallHorizontalMargin">IN PROGRESS</button>
-            <button class="btn btn-default smallHorizontalMargin">UNPAID</button>
-            <button class="btn btn-default smallHorizontalMargin">PAID</button>
+            <button class="btn {{areAllShown() ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
+                    ng-click="toggleShowAll()">
+                ALL
+            </button>
+            <button class="btn {{showInProgressOrders ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
+                    ng-click="showInProgressOrders = !showInProgressOrders">
+                IN PROGRESS
+            </button>
+            <button class="btn {{showUnpaidOrders ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
+                    ng-click="showUnpaidOrders = !showUnpaidOrders">
+                UNPAID
+            </button>
+            <button class="btn {{showPaidOrders ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
+                    ng-click="showPaidOrders = !showPaidOrders">
+                PAID
+            </button>
             <div id="orderListButtonSpacer"></div>
-            <button id="newOrderButton" class="btn btn-default smallHorizontalMargin">NEW ORDER</button>
+            <button id="newOrderButton" class="btn btn-default smallHorizontalMargin">
+                NEW ORDER
+            </button>
+        </div>
+
+        <table class="table table-striped table-bordered table-hover smallVerticalMargin" ng-show="ordersExist()">
+            <tr>
+                <th>Status</th>
+                <th>Timestamp</th>
+                <th>Order Number</th>
+                <th>Total</th>
+            </tr>
+            <tr ng-repeat="order in allOrders">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <div id="noOrdersWarning" class="smallVerticalMargin" ng-hide="ordersExist()">
+            No orders exist.
         </div>
     </div>
 
