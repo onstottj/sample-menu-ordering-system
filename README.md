@@ -25,13 +25,15 @@ Installation
 ------------
 
  - The database used is MySQL, and the DDL is in database.sql in this directory
+   I'm afraid MySQL 5.6.5 or later is required, due to http://stackoverflow.com/a/10603198/132374.
  - The database name is 'pos', with a user 'pos' with password 'pos'.  These details are hard-coded 
    in com.reonsoftware.possample.Application for now.
  - The project was created using IntelliJ and Maven
 
-Caveats
--------
+Notes
+-----
 
+ - I enjoy TDD & BDD, but haven't set up Java/Javascript unit tests for this sample yet
  - Flexbox was used for UI layout, so please view the site using a modern browser
  - NPM was used to pull in dependencies like Angular.  Typically I'd exclude the node_modules folder from source
    control, but in this case I'm including it so that you don't have to install Node on your system.

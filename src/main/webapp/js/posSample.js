@@ -35,6 +35,9 @@ posModule.service('orderPersistence', function ($http, $q) {
         removeItemFromOrder: function (orderId, itemId) {
             $http.delete(baseUrl + "orders/" + orderId + "/items/" + itemId);
         },
+        assignOrderNumber: function (orderId) {
+            return $http.get(baseUrl + "orders/" + orderId + "/assignOrderNumber");
+        },
         recordPayment: function (orderId, amountTendered, changeDue) {
             var tenderRecord = {
                 orderId: orderId,
@@ -49,6 +52,7 @@ posModule.service('orderPersistence', function ($http, $q) {
 posModule.service('orderStatus', function ($http, orderPersistence) {
     // This is set once the order has been created in the backend
     var orderId;
+    var orderNumber;
     // A dictionary of the items in the order; see http://stackoverflow.com/questions/11985863/how-to-use-ng-repeat-for-dictionaries-in-angularjs
     var itemsInOrder = {};
     // When payment is processed, this becomes a JSON object with amountTendered and changeDue
@@ -70,6 +74,12 @@ posModule.service('orderStatus', function ($http, orderPersistence) {
     return {
         getOrderId: function () {
             return orderId;
+        },
+        getOrderNumber: function () {
+            return orderNumber;
+        },
+        setOrderNumber: function (newOrderNumber) {
+            orderNumber = newOrderNumber;
         },
         itemsInOrder: itemsInOrder,
         addItem: function (item) {
@@ -105,13 +115,18 @@ posModule.service('orderStatus', function ($http, orderPersistence) {
 });
 
 posModule.controller('OrderEntryController', function ($scope, $http, $uibModal, orderStatus) {
-    // Proxy some orderStatus values/functions
+    // Proxy some orderStatus values/functions.  Maybe there's a better way to do this (like wrapping these in an object)?
+    $scope.getOrderNumber = orderStatus.getOrderNumber;
     $scope.itemsInOrder = orderStatus.itemsInOrder;
     $scope.addItem = orderStatus.addItem;
     $scope.getSubtotal = orderStatus.getSubtotal;
     $scope.getSalesTax = orderStatus.getSalesTax;
     $scope.getGrandTotal = orderStatus.getGrandTotal;
     $scope.paymentResults = orderStatus.paymentResults;
+
+    $scope.hasOrderNumber = function () {
+        return isFinite(orderStatus.getOrderNumber());
+    };
 
     $scope.allItems = [];
     $scope.selectedItem = null;
@@ -174,6 +189,12 @@ posModule.controller('TenderPaymentController', function ($scope, $uibModalInsta
 
         orderPersistence.recordPayment(orderStatus.getOrderId(), amountTendered, changeDue);
 
+        // Assign the order number after we've created it in the backend
+        orderPersistence.assignOrderNumber(orderStatus.getOrderId())
+            .then(function (response) {
+                orderStatus.setOrderNumber(response.data);
+            });
+
         $uibModalInstance.close();
     };
 
@@ -210,3 +231,19 @@ posModule.controller('FileUploadController', ['$scope', 'Upload', '$timeout', fu
         }
     }
 }]);
+
+// From http://stackoverflow.com/a/17648547/132374
+posModule.filter('padWithLeadingZeros', function () {
+    return function (n, len) {
+        var num = parseInt(n, 10);
+        len = parseInt(len, 10);
+        if (isNaN(num) || isNaN(len)) {
+            return n;
+        }
+        num = '' + num;
+        while (num.length < len) {
+            num = '0' + num;
+        }
+        return num;
+    };
+});

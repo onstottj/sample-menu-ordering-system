@@ -25,17 +25,17 @@ CREATE TABLE `order_line_items` (
 		ON UPDATE NO ACTION
 )
 	ENGINE = InnoDB
-	AUTO_INCREMENT = 5
+	AUTO_INCREMENT = 18
 	DEFAULT CHARSET = utf8;
 
 CREATE TABLE `orders` (
-	`order_id`     INT(11) NOT NULL AUTO_INCREMENT,
-	`order_number` INT(11)          DEFAULT NULL,
-	PRIMARY KEY (`order_id`),
-	UNIQUE KEY `order_number_uk` (`order_number`)
+	`order_id`           INT(11) NOT NULL AUTO_INCREMENT,
+	`order_number`       INT(11)          DEFAULT NULL,
+	`number_assign_date` DATETIME         DEFAULT NULL,
+	PRIMARY KEY (`order_id`)
 )
 	ENGINE = InnoDB
-	AUTO_INCREMENT = 12
+	AUTO_INCREMENT = 23
 	DEFAULT CHARSET = utf8;
 
 CREATE TABLE `tender` (
@@ -50,4 +50,5 @@ CREATE TABLE `tender` (
 		ON UPDATE NO ACTION
 )
 	ENGINE = InnoDB
+	AUTO_INCREMENT = 11
 	DEFAULT CHARSET = utf8;

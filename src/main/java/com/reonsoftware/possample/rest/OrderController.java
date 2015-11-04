@@ -27,6 +27,14 @@ public class OrderController {
         return orderDao.createOrder(order);
     }
 
+    /**
+     * @return the order's new order number
+     */
+    @RequestMapping(value = "/api/orders/{orderId}/assignOrderNumber", method = RequestMethod.GET)
+    public int assignOrderNumber(@PathVariable("orderId") long orderId) {
+        return orderDao.assignOrderNumber(orderId);
+    }
+
     @RequestMapping(value = "/api/orders/{orderId}/items", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public void addItemToOrder(@PathVariable("orderId") long orderId,

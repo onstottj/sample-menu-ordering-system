@@ -49,8 +49,12 @@
 
                 <div id="orderSidebar" class="smallMargin">
                     <div>
-                        <!-- TODO.  Also, pad order # with zeros -->
-                        New Order / Order #099
+                        <span ng-hide="hasOrderNumber()">
+                            New Order
+                        </span>
+                        <span ng-show="hasOrderNumber()">
+                            Order #{{getOrderNumber() | padWithLeadingZeros:3}}
+                        </span>
                     </div>
 
                     <!-- The list of items in this order -->

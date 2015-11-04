@@ -46,6 +46,9 @@
 
 #paymentResultsPanel {
     padding-left: 20px;
+    font-style: italic;
+    font-weight: bold;
+    color: green;
 }
 
 .totalsPanelRow {

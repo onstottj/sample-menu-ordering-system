@@ -33,6 +33,38 @@ public class OrderDao {
         return keyHolder.getKey().longValue();
     }
 
+    public int assignOrderNumber(long orderId) {
+        Integer existingOrderNumber = jdbcTemplate.queryForObject("SELECT order_number FROM orders WHERE order_id = ?", Integer.class, orderId);
+        if (existingOrderNumber != null)
+            return existingOrderNumber;
+
+        Integer newOrderNumber = determineNewOrderNumber();
+        jdbcTemplate.update("UPDATE orders SET order_number = ?, number_assign_date = CURRENT_TIMESTAMP WHERE order_id = ?", newOrderNumber, orderId);
+        LOGGER.info("Assigned order number " + newOrderNumber + " to order " + orderId);
+        return newOrderNumber;
+    }
+
+    /**
+     * @return the most recently assigned order number, or 0 if there isn't one
+     */
+    private int lookupMostRecentOrderNumber() {
+        String mostRecentOrderNumberAssignDateSql = "SELECT MAX(B.number_assign_date) FROM orders AS B WHERE B.order_number IS NOT NULL";
+        try {
+            return jdbcTemplate.queryForObject("SELECT order_number FROM orders AS A WHERE A.number_assign_date = (" + mostRecentOrderNumberAssignDateSql + ")", Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            // TODO: it would be nice to not have to rely on exceptions in normal operation
+            return 0;
+        }
+    }
+
+    /**
+     * @return the new order number, resetting after we've reached 100
+     */
+    private Integer determineNewOrderNumber() {
+        int incrementedValue = lookupMostRecentOrderNumber() + 1;
+        return (incrementedValue > 100 ? 1 : incrementedValue);
+    }
+
     public void addItemToOrder(long orderId, long itemId) {
         Integer existingQuantity = countQuantityOfItemForOrder(orderId, itemId);
         if (existingQuantity == 0)
@@ -51,6 +83,7 @@ public class OrderDao {
      */
     public void deleteItemFromOrder(long orderId, long itemId) {
         jdbcTemplate.update("DELETE FROM order_line_items WHERE order_id = ? AND item_id = ?", orderId, itemId);
+        LOGGER.info("Deleted all items with ID " + itemId + " from order " + orderId);
     }
 
     private int countQuantityOfItemForOrder(long orderId, long itemId) {
