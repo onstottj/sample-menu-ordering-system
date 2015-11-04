@@ -2,8 +2,10 @@
  * @author Jon Onstott
  * @since 11/1/2015
  */
-posModule.controller('OrderEntryController', function ($scope, $http, $uibModal, orderStatus) {
+posModule.controller('OrderEntryController', function ($scope, $http, $uibModal, viewManager, orderStatus) {
     // Proxy some orderStatus values/functions.  Maybe there's a better way to do this (like wrapping these in an object)?
+    $scope.isShowingList = viewManager.isShowingList;
+    $scope.setIsShowingList = viewManager.setIsShowingList;
     $scope.getOrderNumber = orderStatus.getOrderNumber;
     $scope.itemsInOrder = orderStatus.itemsInOrder;
     $scope.addItem = orderStatus.addItem;

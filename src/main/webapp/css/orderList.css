@@ -1,0 +1,12 @@
+#orderListButtonContainer {
+    display: flex;
+}
+
+#orderListButtonSpacer {
+    flex-grow: 1;
+}
+
+#newOrderButton {
+    align-self: flex-end;
+}
+

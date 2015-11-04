@@ -10,7 +10,9 @@
     <script src="js/posSample.js"></script>
     <script src="js/controllers/fileUploadController.js"></script>
     <script src="js/controllers/orderEntryController.js"></script>
+    <script src="js/controllers/orderListController.js"></script>
     <script src="js/controllers/tenderPaymentController.js"></script>
+    <script src="js/services/viewManager.js"></script>
     <script src="js/services/orderPersistence.js"></script>
     <script src="js/services/orderStatus.js"></script>
 
@@ -25,11 +27,13 @@
 
     <link rel="stylesheet" type="text/css" href="css/styles.css"/>
     <link rel="stylesheet" type="text/css" href="css/ordersSidebar.css"/>
+    <link rel="stylesheet" type="text/css" href="css/orderList.css"/>
     <link rel="stylesheet" type="text/css" href="css/tenderPaymentDialog.css"/>
 </head>
 <body ng-app="posApp">
 
 <div ng-controller="OrderEntryController"
+     ng-hide="isShowingList()"
      class="panel panel-default">
 
     <div class="panel-heading">
@@ -40,15 +44,26 @@
         <form>
             <div>
                 <button id="viewOrdersButton"
-                        class="btn btn-default smallHorizontalMargin">
+                        class="btn btn-default smallHorizontalMargin"
+                        ng-click="setIsShowingList(true)">
                     ORDERS
                 </button>
             </div>
 
-            <div ng-include src="'orderSidebar.html'"></div>
+            <div id="itemsAndSummaryContainer">
+                <div id="itemsList">
+                    <button class="itemButton smallMargin" ng-repeat="item in allItems" ng-click="addItem(item)">
+                        {{item.name}}
+                    </button>
+                </div>
+
+                <div ng-include src="'orderSidebar.html'"></div>
+            </div>
         </form>
     </div>
 </div>
+
+<div ng-include src="'orderList.html'"></div>
 
 <hr/>
 
