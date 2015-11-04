@@ -46,3 +46,12 @@ In a real web app, things would be a bit different:
  - It'd be nice to make use of Angular directives (maybe make menu items into a reusable directive/tag)
  - NPM was used to pull in dependencies like Angular.  Typically I'd exclude the node_modules folder from source
    control, but in this case I'm including it so that you don't have to install Node on your system.
+   
+Screenshots
+-----------
+   
+![Order entry](/docs/screenshot_order_entry.PNG?raw=true "Order entry")
+
+![Payment dialog](/docs/screenshot_payment.PNG?raw=true "Payment dialog")
+
+![List of orders](/docs/screenshot_payment.PNG?raw=true "List of orders")
