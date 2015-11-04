@@ -14,7 +14,7 @@ posModule.service('orderPersistence', function ($http, $q) {
          */
         createOrder: function (initialItem) {
             return $q(function (resolve, reject) {
-                var newOrder = {id: null, orderNumber: null, items: []};
+                var newOrder = {id: null, orderNumber: null};
                 $http.post(baseUrl + "orders", newOrder)
                     .then(function (response) {
                         var orderId = response.data;

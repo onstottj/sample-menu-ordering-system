@@ -1,6 +1,10 @@
 package com.reonsoftware.possample.db;
 
+import com.reonsoftware.possample.models.DetailedLineItem;
+import com.reonsoftware.possample.models.DetailedOrder;
 import com.reonsoftware.possample.models.Order;
+import com.reonsoftware.possample.models.Tender;
+import com.reonsoftware.possample.rest.SettingsController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +14,10 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Jon Onstott
@@ -25,6 +33,42 @@ public class OrderDao {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    private ItemDao itemDao;
+
+    public List<DetailedOrder> getOrders(OrderFilter filter) {
+        String filterSql = filter.getFilterSql();
+        String orderSql = "SELECT orders.*, tender.amount_tendered, tender.change_due " +
+                "FROM orders " +
+                "LEFT OUTER JOIN tender ON orders.order_id = tender.order_id " +
+                (!filterSql.isEmpty() ? " WHERE " + filterSql : "");
+        return jdbcTemplate.query(orderSql, (orderRs, rowNum) -> {
+            long orderId = orderRs.getLong("order_id");
+            int orderNumber = orderRs.getInt("order_number");
+            Date numberAssignDate = orderRs.getDate("number_assign_date");
+            List<DetailedLineItem> lineItems = itemDao.getDetailedLineItems(orderId);
+
+            BigDecimal amountTendered = orderRs.getBigDecimal("tender.amount_tendered");
+            BigDecimal changeDue = orderRs.getBigDecimal("tender.change_due");
+            Tender tender = amountTendered != null && changeDue != null
+                    ? new Tender(null, orderId, amountTendered, changeDue)
+                    : null;
+
+            BigDecimal totalDue = calculateTotalDue(lineItems);
+
+            return new DetailedOrder(orderId, orderNumber, numberAssignDate, lineItems, totalDue, tender);
+        });
+    }
+
+    private BigDecimal calculateTotalDue(List<DetailedLineItem> lineItems) {
+        BigDecimal total = new BigDecimal(0);
+        for (DetailedLineItem lineItem : lineItems) {
+            total = total.add(lineItem.getExtendedPrice());
+        }
+        BigDecimal tax = total.multiply(new BigDecimal(SettingsController.SALES_TAX_RATE));
+        return total.add(tax);
+    }
 
     public long createOrder(Order order) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();

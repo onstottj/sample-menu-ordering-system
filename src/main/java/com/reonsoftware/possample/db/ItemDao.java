@@ -1,5 +1,6 @@
 package com.reonsoftware.possample.db;
 
+import com.reonsoftware.possample.models.DetailedLineItem;
 import com.reonsoftware.possample.models.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +20,20 @@ public class ItemDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    public List<DetailedLineItem> getDetailedLineItems(long orderId) {
+        String lineItemSql = "SELECT item_id, quantity FROM order_line_items WHERE order_id = ?";
+        return jdbcTemplate.query(lineItemSql, (itemRs, rowNum1) -> {
+            long itemId = itemRs.getLong("item_id");
+            Item item = getItem(itemId);
+            int quantity = itemRs.getInt("quantity");
+            return new DetailedLineItem(item, quantity);
+        }, orderId);
+    }
+
+    private Item getItem(long itemId) {
+        return jdbcTemplate.queryForObject("SELECT item_id, name, price FROM items WHERE item_id = ?", new ItemMapper(), itemId);
+    }
 
     public List<Item> getItems() {
         return jdbcTemplate.query("SELECT item_id, name, price FROM items", new ItemMapper());

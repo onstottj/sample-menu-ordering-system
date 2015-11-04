@@ -34,10 +34,10 @@
                 <th>Total</th>
             </tr>
             <tr ng-repeat="order in allOrders">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td ng-bind="determineOrderStatus(order)"></td>
+                <td ng-bind="order.numberAssignDate"></td>
+                <td ng-bind="order.orderNumber"></td>
+                <td ng-bind="order.totalDue"></td>
             </tr>
         </table>
 

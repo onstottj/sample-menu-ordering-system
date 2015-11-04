@@ -3,7 +3,7 @@ package com.reonsoftware.possample.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
+import java.util.Date;
 
 /**
  * @author Jon Onstott
@@ -13,15 +13,15 @@ public class Order {
 
     private final Long id;
     private final Integer orderNumber;
-    private final List<Item> items;
+    private final Date numberAssignDate;
 
     @JsonCreator
     public Order(@JsonProperty("id") Long id,
                  @JsonProperty("orderNumber") Integer orderNumber,
-                 @JsonProperty("items") List<Item> items) {
+                 @JsonProperty("numberAssignDate") Date numberAssignDate) {
         this.id = id;
         this.orderNumber = orderNumber;
-        this.items = items;
+        this.numberAssignDate = numberAssignDate;
     }
 
     public Long getId() {
@@ -32,8 +32,7 @@ public class Order {
         return orderNumber;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public Date getNumberAssignDate() {
+        return numberAssignDate;
     }
-
 }

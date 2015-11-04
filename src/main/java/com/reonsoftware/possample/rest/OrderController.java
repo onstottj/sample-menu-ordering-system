@@ -1,10 +1,14 @@
 package com.reonsoftware.possample.rest;
 
 import com.reonsoftware.possample.db.OrderDao;
+import com.reonsoftware.possample.db.OrderFilter;
+import com.reonsoftware.possample.models.DetailedOrder;
 import com.reonsoftware.possample.models.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Jon Onstott
@@ -15,6 +19,12 @@ public class OrderController {
 
     @Autowired
     private OrderDao orderDao;
+
+    @RequestMapping(value = "/api/orders", method = RequestMethod.GET)
+    public List<DetailedOrder> getOrders(@RequestParam(value = "requireOrderNumber", required = false) Boolean requireOrderNumber,
+                                         @RequestParam(value = "requireIsTendered", required = false) Boolean requireIsTendered) {
+        return orderDao.getOrders(new OrderFilter(requireOrderNumber, requireIsTendered));
+    }
 
     /**
      * TODO: in production systems, a REST POST call would typically return the created object

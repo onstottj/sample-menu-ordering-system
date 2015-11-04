@@ -1,4 +1,8 @@
-/* From https://github.com/danialfarid/ng-file-upload */
+#fileUploadPanel {
+    margin-top: 40px;
+}
+
+/* The rest of this is from https://github.com/danialfarid/ng-file-upload */
 
 .thumb {
     width: 24px;

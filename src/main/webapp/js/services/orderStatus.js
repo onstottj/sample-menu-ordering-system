@@ -8,8 +8,14 @@ posModule.service('orderStatus', function ($http, orderPersistence) {
     var orderNumber;
     // A dictionary of the items in the order; see http://stackoverflow.com/questions/11985863/how-to-use-ng-repeat-for-dictionaries-in-angularjs
     var itemsInOrder = {};
+    var salesTaxRate;
     // When payment is processed, this becomes a JSON object with amountTendered and changeDue
     var paymentResults = {};
+
+    // TODO: there could be a better way of loading this value from the server
+    $http.get(baseUrl + "settings/salesTaxRate").then(function (response) {
+        salesTaxRate = response.data;
+    });
 
     function getSubtotal() {
         var subtotal = 0;
@@ -20,8 +26,7 @@ posModule.service('orderStatus', function ($http, orderPersistence) {
     }
 
     function getSalesTax() {
-        // This sales tax is about 6%.  The rate could be made into a constant of some sort.
-        return getSubtotal() * 0.059446733372;
+        return getSubtotal() * salesTaxRate;
     }
 
     return {
