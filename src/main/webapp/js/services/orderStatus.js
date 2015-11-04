@@ -61,9 +61,12 @@ posModule.service('orderStatus', function ($http, orderPersistence) {
                 };
             });
 
-            var tender = order.tender;
-            paymentResults.amountTendered = tender && tender.amountTendered;
-            paymentResults.changeDue = tender && tender.changeDue;
+            if (order.tender) {
+                // Copy over the amountTendered and changeDue values
+                angular.extend(paymentResults, order.tender);
+            } else {
+                clearPaymentDetails();
+            }
         },
 
         getOrderId: function () {

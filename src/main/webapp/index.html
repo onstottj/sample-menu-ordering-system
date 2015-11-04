@@ -52,7 +52,16 @@
 
             <div id="itemsAndSummaryContainer">
                 <div id="itemsList">
-                    <button class="itemButton smallMargin" ng-repeat="item in allItems" ng-click="addItem(item)">
+                    <div ng-show="allItems.length === 0"
+                         class="genericWarning">
+                        Please use the .csv import feature below.
+                    </div>
+
+                    <button class="itemButton smallMargin"
+                            style="{{isPaymentComplete() ? 'opacity: 0.6;' : ''}}"
+                            ng-repeat="item in allItems"
+                            ng-disabled="isPaymentComplete()"
+                            ng-click="addItem(item)">
                         {{item.name}}
                     </button>
                 </div>

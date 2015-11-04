@@ -88,6 +88,16 @@ posModule.controller('OrderListController', function ($scope, $http, orderStatus
     // When the filters change, refresh the list of orders
     $scope.$watchGroup(['showInProgressOrders', 'showUnpaidOrders', 'showPaidOrders'], retrieveOrders);
 
+    // When the orders list is shown, refresh the list of orders
+    // From http://www.bennadel.com/blog/2658-using-scope-watch-to-watch-functions-in-angularjs.htm
+    $scope.$watch(function () {
+        return $scope.isShowingList();
+    }, function () {
+        if ($scope.isShowingList()) {
+            retrieveOrders();
+        }
+    });
+
     $scope.startNewOrder = function () {
         orderStatus.startNewOrder();
         viewManager.setIsShowingList(false);

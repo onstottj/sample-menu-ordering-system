@@ -18,6 +18,8 @@ posModule.controller('FileUploadController', ['$scope', 'Upload', '$timeout', fu
                 $timeout(function () {
                     file.result = response.data;
                     $scope.uploadMessage = 'Items imported successfully';
+                    // TODO: it'd be better to make an items service that holds all items, and we'd be able to trigger a refresh of item data instead
+                    location.reload();
                 });
             }, function (response) {
                 // There was an error

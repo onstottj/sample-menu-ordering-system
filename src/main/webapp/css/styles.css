@@ -14,6 +14,11 @@ body {
     margin: 10px 0;
 }
 
+.genericWarning {
+    font-style: italic;
+    font-weight: bold;
+}
+
 .centeredTable {
     margin-left: auto;
     margin-right: auto;
