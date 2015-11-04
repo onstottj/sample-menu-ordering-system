@@ -50,8 +50,8 @@ In a real web app, things would be a bit different:
 Screenshots
 -----------
    
-![Order entry](/docs/screenshot_order_entry.PNG?raw=true "Order entry")
+![Order entry](/docs/orderEntry.png?raw=true "Order entry")
 
-![Payment dialog](/docs/screenshot_payment.PNG?raw=true "Payment dialog")
+![Payment dialog](/docs/paymentDialog.png?raw=true "Payment dialog")
 
-![List of orders](/docs/screenshot_payment.PNG?raw=true "List of orders")
+![List of orders](/docs/orderList.png?raw=true "List of orders")
