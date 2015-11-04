@@ -1,0 +1,23 @@
+<div ng-controller="FileUploadController">
+    <form>
+        <h4>Upload an items .csv file</h4>
+
+        <button type="file"
+                class="btn btn-primary"
+                ngf-select="uploadFiles($file, $invalidFiles)"
+                ngf-max-height="1000"
+                ngf-max-size="1MB">
+            Select File
+        </button>
+
+        <br><br>
+
+        <div style="font:smaller">{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}
+            <span class="progress" ng-show="f.progress >= 0">
+                <div style="width:{{f.progress}}%" ng-bind="f.progress + '%'"></div>
+            </span>
+        </div>
+
+        {{uploadMessage}}
+    </form>
+</div>
