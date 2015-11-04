@@ -74,7 +74,7 @@ posModule.service('orderStatus', function ($http, orderPersistence) {
         },
 
         hasOrderNumber: function () {
-            return isFinite(orderNumber);
+            return orderNumber && isFinite(orderNumber);
         },
 
         getOrderNumber: function () {

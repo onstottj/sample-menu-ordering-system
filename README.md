@@ -49,9 +49,12 @@ In a real web app, things would be a bit different:
    
 Screenshots
 -----------
-   
+
+*List of orders:*
+![List of orders](/docs/orderList.png?raw=true "List of orders")
+
+*Order entry:*
 ![Order entry](/docs/orderEntry.png?raw=true "Order entry")
 
+*Payment dialog:*
 ![Payment dialog](/docs/paymentDialog.png?raw=true "Payment dialog")
-
-![List of orders](/docs/orderList.png?raw=true "List of orders")
