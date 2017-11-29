@@ -9,19 +9,19 @@
                 <table class="centeredTable">
                     <tr>
                         <td class="paymentDialogLeftColumn">Amount Due:</td>
-                        <td ng-bind="getGrandTotal() | currency"></td>
+                        <td ng-bind="vm.getGrandTotal() | currency"></td>
                     </tr>
                     <tr>
                         <td class="paymentDialogLeftColumn">Amount Tendered:</td>
                         <td>
                             <input id="txtAmountTendered"
                                    type="text"
-                                   ng-model="amountTendered"/>
+                                   ng-model="vm.amountTendered"/>
                         </td>
                     </tr>
                     <tr>
                         <td class="paymentDialogLeftColumn">Change Due:</td>
-                        <td ng-bind="getChangeDue() | currency"></td>
+                        <td ng-bind="vm.getChangeDue() | currency"></td>
                     </tr>
                 </table>
             </td>
@@ -31,13 +31,13 @@
 
 <div class="modal-footer">
     <button class="btn btn-default"
-            ng-click="cancelPayment()">
+            ng-click="vm.cancelPayment()">
         CANCEL
     </button>
 
     <button class="btn btn-primary"
-            ng-disabled="!isPaymentValid()"
-            ng-click="submitPayment()">
+            ng-disabled="!vm.isPaymentValid()"
+            ng-click="vm.submitPayment()">
         TENDER
     </button>
 </div>

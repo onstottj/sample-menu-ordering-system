@@ -1,49 +1,49 @@
 <div ng-controller="OrderListController"
-     ng-show="viewManager.isShowingList"
+     ng-show="vm.viewManager.isShowingList"
      class="panel panel-default">
 
     <div class="panel-body">
         <div id="orderListButtonContainer">
-            <button class="btn {{areAllShown() ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
-                    ng-click="toggleShowAll()">
+            <button class="btn {{vm.areAllShown() ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
+                    ng-click="vm.toggleShowAll()">
                 ALL
             </button>
-            <button class="btn {{showInProgressOrders ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
-                    ng-click="showInProgressOrders = !showInProgressOrders">
+            <button class="btn {{vm.showInProgressOrders ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
+                    ng-click="vm.showInProgressOrders = !vm.showInProgressOrders">
                 IN PROGRESS
             </button>
-            <button class="btn {{showUnpaidOrders ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
-                    ng-click="showUnpaidOrders = !showUnpaidOrders">
+            <button class="btn {{vm.showUnpaidOrders ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
+                    ng-click="vm.showUnpaidOrders = !vm.showUnpaidOrders">
                 UNPAID
             </button>
-            <button class="btn {{showPaidOrders ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
-                    ng-click="showPaidOrders = !showPaidOrders">
+            <button class="btn {{vm.showPaidOrders ? 'btn-success' : 'btn-default'}} smallHorizontalMargin"
+                    ng-click="vm.showPaidOrders = !vm.showPaidOrders">
                 PAID
             </button>
             <div id="orderListButtonSpacer"></div>
-            <button id="newOrderButton" class="btn btn-default smallHorizontalMargin" ng-click="startNewOrder()">
+            <button id="newOrderButton" class="btn btn-default smallHorizontalMargin" ng-click="vm.startNewOrder()">
                 NEW ORDER
             </button>
         </div>
 
-        <table class="table table-striped table-bordered table-hover smallVerticalMargin" ng-show="ordersExist()">
+        <table class="table table-striped table-bordered table-hover smallVerticalMargin" ng-show="vm.ordersExist()">
             <tr>
                 <th>Status</th>
                 <th>Timestamp</th>
                 <th>Order Number</th>
                 <th>Total</th>
             </tr>
-            <tr ng-repeat="order in allOrders"
-                ng-click="openOrder(order)">
-                <td ng-bind="determineOrderStatus(order)"></td>
-                <td ng-bind="order.numberAssignDate"></td>
-                <td ng-show="hasOrderNumber(order)">#{{order.orderNumber | padWithLeadingZeros:3}}</td>
-                <td ng-hide="hasOrderNumber(order)"></td>
+            <tr ng-repeat="order in vm.allOrders"
+                ng-click="vm.openOrder(order)">
+                <td ng-bind="vm.determineOrderStatus(order)"></td>
+                <td ng-bind="vm.order.numberAssignDate"></td>
+                <td ng-show="vm.hasOrderNumber(order)">#{{order.orderNumber | padWithLeadingZeros:3}}</td>
+                <td ng-hide="vm.hasOrderNumber(order)"></td>
                 <td ng-bind="order.totalDue | currency"></td>
             </tr>
         </table>
 
-        <div class="genericWarning smallVerticalMargin" ng-hide="ordersExist()">
+        <div class="genericWarning smallVerticalMargin" ng-hide="vm.ordersExist()">
             No orders to display.  Try clicking "All".
         </div>
     </div>
