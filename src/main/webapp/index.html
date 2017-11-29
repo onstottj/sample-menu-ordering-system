@@ -8,10 +8,10 @@
     <script src="js/node_modules/angular-animate/angular-animate.min.js"></script>
 
     <script src="js/posSample.js"></script>
-    <script src="js/controllers/orderEntryController.js"></script>
+    <script src="js/controllers/order-entry-controller.controller.js"></script>
     <script src="js/controllers/orderListController.js"></script>
     <script src="js/controllers/tenderPaymentController.js"></script>
-    <script src="js/controllers/fileUploadController.js"></script>
+    <script src="js/controllers/file-upload-controller.controller.js"></script>
     <script src="js/services/order-persistence.factory.js"></script>
     <script src="js/services/order-status.factory.js"></script>
     <script src="js/services/view-manager.factory.js"></script>
@@ -33,7 +33,7 @@
 <body ng-app="posApp">
 
 <div ng-controller="OrderEntryController"
-     ng-hide="viewManager.isShowingList"
+     ng-hide="vm.viewManager.isShowingList"
      class="panel panel-default">
 
     <div class="panel-heading">
@@ -45,23 +45,23 @@
             <div>
                 <button id="viewOrdersButton"
                         class="btn btn-default smallHorizontalMargin"
-                        ng-click="viewManager.isShowingList = true">
+                        ng-click="vm.viewManager.isShowingList = true">
                     ORDERS
                 </button>
             </div>
 
             <div id="itemsAndSummaryContainer">
                 <div id="itemsList">
-                    <div ng-show="allItems.length === 0"
+                    <div ng-show="vm.allItems.length === 0"
                          class="genericWarning">
                         Please use the .csv import feature below.
                     </div>
 
                     <button class="itemButton smallMargin"
                             style="{{isPaymentComplete() ? 'opacity: 0.6;' : ''}}"
-                            ng-repeat="item in allItems"
-                            ng-disabled="isPaymentComplete()"
-                            ng-click="addItem(item)">
+                            ng-repeat="item in vm.allItems"
+                            ng-disabled="vm.isPaymentComplete()"
+                            ng-click="vm.addItem(item)">
                         {{item.name}}
                     </button>
                 </div>
