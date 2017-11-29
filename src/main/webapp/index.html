@@ -12,9 +12,9 @@
     <script src="js/controllers/orderListController.js"></script>
     <script src="js/controllers/tenderPaymentController.js"></script>
     <script src="js/controllers/fileUploadController.js"></script>
-    <script src="js/services/orderPersistence.js"></script>
-    <script src="js/services/orderStatus.js"></script>
-    <script src="js/services/viewManager.js"></script>
+    <script src="js/services/order-persistence.factory.js"></script>
+    <script src="js/services/order-status.factory.js"></script>
+    <script src="js/services/view-manager.factory.js"></script>
 
     <!-- To use Bootstrap in Angular (modals, styling, etc...) -->
     <script src="js/node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.min.js"></script>
@@ -33,7 +33,7 @@
 <body ng-app="posApp">
 
 <div ng-controller="OrderEntryController"
-     ng-hide="isShowingList()"
+     ng-hide="viewManager.isShowingList"
      class="panel panel-default">
 
     <div class="panel-heading">
@@ -45,7 +45,7 @@
             <div>
                 <button id="viewOrdersButton"
                         class="btn btn-default smallHorizontalMargin"
-                        ng-click="setIsShowingList(true)">
+                        ng-click="viewManager.isShowingList = true">
                     ORDERS
                 </button>
             </div>

@@ -3,8 +3,7 @@
  * @since 11/3/2015
  */
 posModule.controller('OrderListController', function ($scope, $http, orderStatus, viewManager) {
-    // Proxy some orderStatus values/functions.  Maybe there's a better way to do this (like wrapping these in an object)?
-    $scope.isShowingList = viewManager.isShowingList;
+    $scope.viewManager = viewManager;
 
     $scope.allOrders = [];
 
@@ -91,9 +90,9 @@ posModule.controller('OrderListController', function ($scope, $http, orderStatus
     // When the orders list is shown, refresh the list of orders
     // From http://www.bennadel.com/blog/2658-using-scope-watch-to-watch-functions-in-angularjs.htm
     $scope.$watch(function () {
-        return $scope.isShowingList();
+        return viewManager.isShowingList;
     }, function () {
-        if ($scope.isShowingList()) {
+        if (viewManager.isShowingList) {
             retrieveOrders();
         }
     });
